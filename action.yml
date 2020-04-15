@@ -16,6 +16,7 @@ inputs:
   run-tests:
     description: 'Whether to run flixel tests'
     required: false
+    default: "false"
 runs:
   using: 'node12'
   main: 'build/index.js'
