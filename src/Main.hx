@@ -20,7 +20,7 @@ class Main {
 		var runTests:Bool = Core.getInput("runTests");
 
 		var installationResult = runUntilFailure([
-			run.bind('lix install haxe $haxeVersion'),
+			run.bind('lix install haxe $haxeVersion --global'),
 			installHaxelibs,
 			installHxcpp.bind(target)
 		]);

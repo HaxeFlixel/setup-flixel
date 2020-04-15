@@ -3,7 +3,7 @@ import sys.io.File;
 
 class Build {
 	static function main() {
-		Sys.command("ncc build build/haxe-output.js");
+		Sys.command("ncc build build/haxe-output.js -o build");
 
 		var path = "build/index.js";
 		var file = File.getContent(path);

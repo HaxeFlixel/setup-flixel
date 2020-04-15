@@ -450,7 +450,7 @@ Main.main = function() {
 	Core.getInput("flixel-versions");
 	var target = Core.getInput("target");
 	Core.getInput("runTests");
-	var cmd = "lix install haxe " + haxeVersion;
+	var cmd = "lix install haxe " + haxeVersion + " --global";
 	var target1 = target;
 	if(Command.runUntilFailure([function() {
 		return Command.run(cmd);
@@ -459,7 +459,7 @@ Main.main = function() {
 	}]) != 0) {
 		process.exit(1);
 	}
-	Command.run("haxelib",["list"]);
+	Command.run("haxelib list");
 };
 Main.installHaxelibs = function() {
 	return Command.runUntilFailure([function() {
