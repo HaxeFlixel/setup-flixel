@@ -4,4 +4,5 @@
 -dce full
 -lib hxnodejs
 -D analyzer-optimize
+-D js-es=6
 -cmd npm run build
