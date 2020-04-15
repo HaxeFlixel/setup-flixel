@@ -6,6 +6,6 @@
 	},
 	"scripts": {
 		"postinstall": "lix download",
-		"build": "ncc build build/haxe-output.js -o build"
+		"build": "haxe --run Build"
 	}
 }

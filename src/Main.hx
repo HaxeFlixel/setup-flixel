@@ -27,7 +27,7 @@ class Main {
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
-		run("haxelib", ["list"]);
+		run("haxelib list");
 	}
 
 	static function installHaxelibs():ExitCode {
