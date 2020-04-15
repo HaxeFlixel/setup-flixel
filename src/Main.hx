@@ -24,9 +24,10 @@ class Main {
 		var target:Target = Core.getInput("target");
 		var runTests:Bool = Core.getInput("runTests");
 
-		Core.startGroup("Installing Haxelibs");
+		Core.startGroup("Installing Haxe Dependencies");
 		var installationResult = runUntilFailure([
 			setupLix.bind(haxeVersion),
+			run.bind("sudo apt install neko"), // for nekotools
 			installHaxelibs.bind(flixelVersions),
 			installHxcpp.bind(target)
 		]);

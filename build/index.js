@@ -459,12 +459,14 @@ Main.main = function() {
 	var flixelVersions = Core.getInput("flixel-versions");
 	var target = Core.getInput("target");
 	Core.getInput("runTests");
-	Core.startGroup("Installing Haxelibs");
+	Core.startGroup("Installing Haxe Dependencies");
 	var haxeVersion1 = haxeVersion;
 	var flixelVersions1 = flixelVersions;
 	var target1 = target;
 	if(Command.runUntilFailure([function() {
 		return Main.setupLix(haxeVersion1);
+	},function() {
+		return Command.run("sudo apt install neko");
 	},function() {
 		return Main.installHaxelibs(flixelVersions1);
 	},function() {
