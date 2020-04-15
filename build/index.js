@@ -407,6 +407,9 @@ class Command {
 		while(_g < methods.length) {
 			var method = methods[_g];
 			++_g;
+			if(!method.active) {
+				continue;
+			}
 			Core.startGroup(method.name);
 			if(method.run() != 0) {
 				result = 1;

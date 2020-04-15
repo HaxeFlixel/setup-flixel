@@ -53,6 +53,9 @@ typedef NamedExecution = {
 	static function runAllNamed(methods:Array<NamedExecution>):ExitCode {
 		var result = Success;
 		for (method in methods) {
+			if (!method.active) {
+				continue;
+			}
 			Core.startGroup(method.name);
 			if (method.run() != Success) {
 				result = Failure;
