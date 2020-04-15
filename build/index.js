@@ -623,10 +623,12 @@ class Main {
 		Command.run("haxelib list");
 		Core.endGroup();
 		if(runTests) {
-			Command.cd(haxe_io_Path.join([Main.HaxelibRepo,"flixel/git"]));
+			Core.startGroup("Test Preparation");
+			Command.cd(haxe_io_Path.join([Main.HaxelibRepo,"flixel/git/tests"]));
 			Command.putEnv("HXCPP_SILENT","1");
 			Command.putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
 			Command.putEnv("HXCPP_CACHE_MB","5000");
+			Core.endGroup();
 			var code = Command.runAllNamed(Tests.make(target));
 			process.exit(code);
 		}
