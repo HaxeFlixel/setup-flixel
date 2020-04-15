@@ -30,7 +30,6 @@ class Main {
 	}
 
 	static function setupLix(haxeVersion):ExitCode {
-		Sys.command("lix scope");
 		var path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
 		if (!FileSystem.exists(path)) {
 			return Failure;
@@ -55,6 +54,7 @@ class Main {
 			Haxelib.install.bind("openfl"),
 			Haxelib.install.bind("lime"),
 
+			Haxelib.git.bind("HaxeFlixel", "flixel"),
 			Haxelib.git.bind("HaxeFlixel", "flixel-tools"),
 			Haxelib.git.bind("HaxeFlixel", "flixel-templates"),
 			Haxelib.git.bind("HaxeFlixel", "flixel-demos"),
