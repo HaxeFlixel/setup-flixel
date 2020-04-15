@@ -410,7 +410,7 @@ Command.runAll = function(methods) {
 };
 Command.run = function(cmd,args) {
 	var v = args == null ? "" : args.join(" ");
-	process.stdout.write(Std.string(cmd + " " + v));
+	process.stdout.write(Std.string("> " + cmd + " " + v));
 	process.stdout.write("\n");
 	if(Command.dryRun) {
 		return 0;
@@ -475,7 +475,12 @@ Main.main = function() {
 		process.exit(1);
 	}
 	Core.endGroup();
-	Core.startGroup("Listing Haxelibs");
+	Core.startGroup("Listing Dependencies");
+	Command.run("lix -v");
+	Command.run("haxe -version");
+	Command.run("neko -version");
+	Command.run("haxelib version");
+	Command.run("haxelib config");
 	Command.run("haxelib list");
 	Core.endGroup();
 };

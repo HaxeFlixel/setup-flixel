@@ -45,7 +45,7 @@ enum abstract ExitCode(Int) from Int to Int {
 	}
 
 	static function run(cmd:String, ?args:Array<String>):ExitCode {
-		Sys.println(cmd + " " + (if (args == null) "" else args.join(" ")));
+		Sys.println("> " + cmd + " " + (if (args == null) "" else args.join(" ")));
 		if (dryRun) {
 			return ExitCode.Success;
 		}

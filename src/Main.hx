@@ -36,7 +36,12 @@ class Main {
 		}
 		Core.endGroup();
 
-		Core.startGroup("Listing Haxelibs");
+		Core.startGroup("Listing Dependencies");
+		run("lix -v");
+		run("haxe -version");
+		run("neko -version");
+		run("haxelib version");
+		run("haxelib config");
 		run("haxelib list");
 		Core.endGroup();
 	}
