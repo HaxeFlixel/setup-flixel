@@ -11,11 +11,13 @@ enum abstract FlixelVersions(String) {
 }
 
 class Main {
+	static final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
+
 	static function main() {
 		final haxeVersion:String = Core.getInput("haxe-version");
 		final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
 		final target:Target = Core.getInput("target");
-		final runTests:Bool = Core.getInput("runTests");
+		final runTests:Bool = Core.getInput("run-tests");
 
 		Core.startGroup("Installing Haxe Dependencies");
 		final installationResult = runUntilFailure([
@@ -27,8 +29,7 @@ class Main {
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
-		final haxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
-		Core.exportVariable("HAXELIB_REPO", haxelibRepo);
+		Core.exportVariable("HAXELIB_REPO", HaxelibRepo);
 		Core.endGroup();
 
 		Core.startGroup("Listing Dependencies");
@@ -41,7 +42,7 @@ class Main {
 		Core.endGroup();
 
 		if (runTests) {
-			cd(Path.join([haxelibRepo, "flixel/git"]));
+			cd(Path.join([HaxelibRepo, "flixel/git"]));
 
 			putEnv("HXCPP_SILENT", "1");
 			putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
@@ -104,7 +105,7 @@ class Main {
 		if (target != Cpp) {
 			return Success;
 		}
-		final hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
+		final hxcppDir = Path.join([HaxelibRepo, "hxcpp/git/"]);
 		return runAll([
 			Haxelib.git.bind("HaxeFoundation", "hxcpp"),
 			runInDir.bind(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),

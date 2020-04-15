@@ -479,224 +479,6 @@ class HxOverrides {
 	}
 }
 HxOverrides.__name__ = true;
-class Main {
-	static main() {
-		var haxeVersion = Core.getInput("haxe-version");
-		var flixelVersions = Core.getInput("flixel-versions");
-		var target = Core.getInput("target");
-		var runTests = Core.getInput("runTests");
-		Core.startGroup("Installing Haxe Dependencies");
-		var haxeVersion1 = haxeVersion;
-		var flixelVersions1 = flixelVersions;
-		var target1 = target;
-		if(Command.runUntilFailure([function() {
-			return Main.setupLix(haxeVersion1);
-		},function() {
-			return Command.run("sudo apt install neko");
-		},function() {
-			return Main.installHaxelibs(flixelVersions1);
-		},function() {
-			return Main.installHxcpp(target1);
-		}]) != 0) {
-			process.exit(1);
-		}
-		var haxelibRepo = haxe_io_Path.join([process.env["HOME"],"haxe/haxelib"]);
-		Core.exportVariable("HAXELIB_REPO",haxelibRepo);
-		Core.endGroup();
-		Core.startGroup("Listing Dependencies");
-		Command.run("lix -v");
-		Command.run("haxe -version");
-		Command.run("neko -version");
-		Command.run("haxelib version");
-		Command.run("haxelib config");
-		Command.run("haxelib list");
-		Core.endGroup();
-		if(runTests) {
-			Command.cd(haxe_io_Path.join([haxelibRepo,"flixel/git"]));
-			Command.putEnv("HXCPP_SILENT","1");
-			Command.putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
-			Command.putEnv("HXCPP_CACHE_MB","5000");
-			var code = Command.runAllNamed(Tests.make(target));
-			process.exit(code);
-		}
-	}
-	static setupLix(haxeVersion) {
-		js_node_ChildProcess.spawnSync("lix scope",{ shell : true, stdio : "inherit"});
-		var path = haxe_io_Path.join([process.env["HOME"],"haxe/.haxerc"]);
-		if(!sys_FileSystem.exists(path)) {
-			return 1;
-		}
-		js_node_Fs.writeFileSync(path,"{\"version\": \"stable\", \"resolveLibs\": \"haxelib\"}");
-		return Command.run("lix install haxe " + haxeVersion + " --global");
-	}
-	static installHaxelibs(flixelVersions) {
-		var libs = [function() {
-			return Haxelib.install("munit");
-		},function() {
-			return Haxelib.install("systools");
-		},function() {
-			return Haxelib.install("task");
-		},function() {
-			return Haxelib.install("poly2trihx");
-		},function() {
-			return Haxelib.install("nape-haxe4");
-		},function() {
-			return Haxelib.git("HaxeFoundation","hscript");
-		},function() {
-			return Haxelib.git("larsiusprime","firetongue");
-		},function() {
-			return Haxelib.git("bendmorris","spinehaxe");
-		},function() {
-			return Haxelib.git("larsiusprime","steamwrap");
-		},function() {
-			return Haxelib.install("openfl");
-		},function() {
-			return Haxelib.install("lime");
-		}];
-		libs = libs.concat(flixelVersions == "dev" ? [function() {
-			return Haxelib.git("HaxeFlixel","flixel");
-		},function() {
-			return Haxelib.git("HaxeFlixel","flixel-tools");
-		},function() {
-			return Haxelib.git("HaxeFlixel","flixel-templates");
-		},function() {
-			return Haxelib.git("HaxeFlixel","flixel-demos");
-		},function() {
-			return Haxelib.git("HaxeFlixel","flixel-addons");
-		},function() {
-			return Haxelib.git("HaxeFlixel","flixel-ui");
-		}] : [function() {
-			return Haxelib.install("flixel");
-		},function() {
-			return Haxelib.install("flixel-tools");
-		},function() {
-			return Haxelib.install("flixel-templates");
-		},function() {
-			return Haxelib.install("flixel-demos");
-		},function() {
-			return Haxelib.install("flixel-addons");
-		},function() {
-			return Haxelib.install("flixel-ui");
-		}]);
-		return Command.runUntilFailure(libs);
-	}
-	static installHxcpp(target) {
-		if(target != "cpp") {
-			return 0;
-		}
-		var hxcppDir = process.env["HOME"] + "/haxe/lib/hxcpp/git/";
-		var dir = hxcppDir + "tools/run";
-		var args = ["compile.hxml"];
-		var dir1 = hxcppDir + "tools/hxcpp";
-		var args1 = ["compile.hxml"];
-		return Command.runAll([function() {
-			return Haxelib.git("HaxeFoundation","hxcpp");
-		},function() {
-			return Command.runInDir(dir,"haxe",args);
-		},function() {
-			return Command.runInDir(dir1,"haxe",args1);
-		}]);
-	}
-}
-Main.__name__ = true;
-Math.__name__ = true;
-class OpenFL {
-	static build(path,target,define) {
-		return OpenFL.run("build",path,target,define);
-	}
-	static run(operation,path,target,define) {
-		var args = ["openfl",operation,path,target];
-		if(define != null) {
-			args.push("-D" + define);
-		}
-		return Haxelib.run(args);
-	}
-}
-OpenFL.__name__ = true;
-class Std {
-	static string(s) {
-		return js_Boot.__string_rec(s,"");
-	}
-}
-Std.__name__ = true;
-class Tests {
-	static make(target) {
-		var target1 = target;
-		var tmp = function() {
-			return Tests.runUnitTests(target1);
-		};
-		var target2 = target;
-		var tmp1 = function() {
-			return Tests.buildCoverageTests(target2);
-		};
-		var target3 = target;
-		var tmp2 = function() {
-			return Tests.buildSwfVersionTests(target3);
-		};
-		var target4 = target;
-		var demos = target == "cpp" ? Tests.ImportantDemos : [];
-		var tmp3 = function() {
-			return Tests.buildDemos(target4,demos);
-		};
-		var target5 = target;
-		var tmp4 = function() {
-			return Tests.buildSnippetsDemos(target5);
-		};
-		return [{ name : "Running Unit Tests", run : tmp},{ name : "Building Coverage Tests", run : tmp1},{ name : "Building SWF Version Tests", run : tmp2, active : target == "flash"},{ name : "Building flixel-demos", run : tmp3},{ name : "Building snippets.haxeflixel.com Demos", run : tmp4, active : target != "cpp"}];
-	}
-	static runUnitTests(target) {
-		var args = ["munit","gen"];
-		Command.runCallbackInDir("unit",function() {
-			return Haxelib.run(args);
-		});
-		if(target == "flash" || target == "html5" || target == "neko") {
-			process.stdout.write("Building unit tests...\n");
-			process.stdout.write("\n");
-			return OpenFL.build("unit",target);
-		} else {
-			process.stdout.write("Running unit tests...\n");
-			process.stdout.write("\n");
-			return OpenFL.run("test","unit",target,"travis");
-		}
-	}
-	static buildCoverageTests(target) {
-		process.stdout.write("\nBuilding coverage tests...\n");
-		process.stdout.write("\n");
-		var target1 = target;
-		var target2 = target;
-		return Command.runAll([function() {
-			return OpenFL.build("coverage",target1,"coverage1");
-		},function() {
-			return OpenFL.build("coverage",target2,"coverage2");
-		}]);
-	}
-	static buildDemos(target,demos) {
-		process.stdout.write("\nBuilding demos...\n");
-		process.stdout.write("\n");
-		return Flixel.buildProjects(target,demos);
-	}
-	static buildSnippetsDemos(target) {
-		process.stdout.write("\nBuilding mechanics demos...\n");
-		process.stdout.write("\n");
-		Command.run("git",["clone","https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
-		return Flixel.buildProjects(target,["-dir","haxeflixel-mechanics"]);
-	}
-	static buildSwfVersionTests(target) {
-		process.stdout.write("\nBuilding swf version tests...\n");
-		process.stdout.write("\n");
-		var target1 = target;
-		var target2 = target;
-		return Command.runAll([function() {
-			return OpenFL.build("swfVersion/11",target1);
-		},function() {
-			return OpenFL.build("swfVersion/11_2",target2);
-		}]);
-	}
-}
-Tests.__name__ = true;
-class haxe_io_Bytes {
-}
-haxe_io_Bytes.__name__ = true;
 class haxe_io_Path {
 	static join(paths) {
 		var _g = [];
@@ -809,6 +591,223 @@ class haxe_io_Path {
 	}
 }
 haxe_io_Path.__name__ = true;
+class Main {
+	static main() {
+		var haxeVersion = Core.getInput("haxe-version");
+		var flixelVersions = Core.getInput("flixel-versions");
+		var target = Core.getInput("target");
+		var runTests = Core.getInput("run-tests");
+		Core.startGroup("Installing Haxe Dependencies");
+		var haxeVersion1 = haxeVersion;
+		var flixelVersions1 = flixelVersions;
+		var target1 = target;
+		if(Command.runUntilFailure([function() {
+			return Main.setupLix(haxeVersion1);
+		},function() {
+			return Command.run("sudo apt install neko");
+		},function() {
+			return Main.installHaxelibs(flixelVersions1);
+		},function() {
+			return Main.installHxcpp(target1);
+		}]) != 0) {
+			process.exit(1);
+		}
+		Core.exportVariable("HAXELIB_REPO",Main.HaxelibRepo);
+		Core.endGroup();
+		Core.startGroup("Listing Dependencies");
+		Command.run("lix -v");
+		Command.run("haxe -version");
+		Command.run("neko -version");
+		Command.run("haxelib version");
+		Command.run("haxelib config");
+		Command.run("haxelib list");
+		Core.endGroup();
+		if(runTests) {
+			Command.cd(haxe_io_Path.join([Main.HaxelibRepo,"flixel/git"]));
+			Command.putEnv("HXCPP_SILENT","1");
+			Command.putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
+			Command.putEnv("HXCPP_CACHE_MB","5000");
+			var code = Command.runAllNamed(Tests.make(target));
+			process.exit(code);
+		}
+	}
+	static setupLix(haxeVersion) {
+		js_node_ChildProcess.spawnSync("lix scope",{ shell : true, stdio : "inherit"});
+		var path = haxe_io_Path.join([process.env["HOME"],"haxe/.haxerc"]);
+		if(!sys_FileSystem.exists(path)) {
+			return 1;
+		}
+		js_node_Fs.writeFileSync(path,"{\"version\": \"stable\", \"resolveLibs\": \"haxelib\"}");
+		return Command.run("lix install haxe " + haxeVersion + " --global");
+	}
+	static installHaxelibs(flixelVersions) {
+		var libs = [function() {
+			return Haxelib.install("munit");
+		},function() {
+			return Haxelib.install("systools");
+		},function() {
+			return Haxelib.install("task");
+		},function() {
+			return Haxelib.install("poly2trihx");
+		},function() {
+			return Haxelib.install("nape-haxe4");
+		},function() {
+			return Haxelib.git("HaxeFoundation","hscript");
+		},function() {
+			return Haxelib.git("larsiusprime","firetongue");
+		},function() {
+			return Haxelib.git("bendmorris","spinehaxe");
+		},function() {
+			return Haxelib.git("larsiusprime","steamwrap");
+		},function() {
+			return Haxelib.install("openfl");
+		},function() {
+			return Haxelib.install("lime");
+		}];
+		libs = libs.concat(flixelVersions == "dev" ? [function() {
+			return Haxelib.git("HaxeFlixel","flixel");
+		},function() {
+			return Haxelib.git("HaxeFlixel","flixel-tools");
+		},function() {
+			return Haxelib.git("HaxeFlixel","flixel-templates");
+		},function() {
+			return Haxelib.git("HaxeFlixel","flixel-demos");
+		},function() {
+			return Haxelib.git("HaxeFlixel","flixel-addons");
+		},function() {
+			return Haxelib.git("HaxeFlixel","flixel-ui");
+		}] : [function() {
+			return Haxelib.install("flixel");
+		},function() {
+			return Haxelib.install("flixel-tools");
+		},function() {
+			return Haxelib.install("flixel-templates");
+		},function() {
+			return Haxelib.install("flixel-demos");
+		},function() {
+			return Haxelib.install("flixel-addons");
+		},function() {
+			return Haxelib.install("flixel-ui");
+		}]);
+		return Command.runUntilFailure(libs);
+	}
+	static installHxcpp(target) {
+		if(target != "cpp") {
+			return 0;
+		}
+		var hxcppDir = haxe_io_Path.join([Main.HaxelibRepo,"hxcpp/git/"]);
+		var dir = hxcppDir + "tools/run";
+		var args = ["compile.hxml"];
+		var dir1 = hxcppDir + "tools/hxcpp";
+		var args1 = ["compile.hxml"];
+		return Command.runAll([function() {
+			return Haxelib.git("HaxeFoundation","hxcpp");
+		},function() {
+			return Command.runInDir(dir,"haxe",args);
+		},function() {
+			return Command.runInDir(dir1,"haxe",args1);
+		}]);
+	}
+}
+Main.__name__ = true;
+Math.__name__ = true;
+class OpenFL {
+	static build(path,target,define) {
+		return OpenFL.run("build",path,target,define);
+	}
+	static run(operation,path,target,define) {
+		var args = ["openfl",operation,path,target];
+		if(define != null) {
+			args.push("-D" + define);
+		}
+		return Haxelib.run(args);
+	}
+}
+OpenFL.__name__ = true;
+class Std {
+	static string(s) {
+		return js_Boot.__string_rec(s,"");
+	}
+}
+Std.__name__ = true;
+class Tests {
+	static make(target) {
+		var target1 = target;
+		var tmp = function() {
+			return Tests.runUnitTests(target1);
+		};
+		var target2 = target;
+		var tmp1 = function() {
+			return Tests.buildCoverageTests(target2);
+		};
+		var target3 = target;
+		var tmp2 = function() {
+			return Tests.buildSwfVersionTests(target3);
+		};
+		var target4 = target;
+		var demos = target == "cpp" ? Tests.ImportantDemos : [];
+		var tmp3 = function() {
+			return Tests.buildDemos(target4,demos);
+		};
+		var target5 = target;
+		var tmp4 = function() {
+			return Tests.buildSnippetsDemos(target5);
+		};
+		return [{ name : "Running Unit Tests", run : tmp},{ name : "Building Coverage Tests", run : tmp1},{ name : "Building SWF Version Tests", run : tmp2, active : target == "flash"},{ name : "Building flixel-demos", run : tmp3},{ name : "Building snippets.haxeflixel.com Demos", run : tmp4, active : target != "cpp"}];
+	}
+	static runUnitTests(target) {
+		var args = ["munit","gen"];
+		Command.runCallbackInDir("unit",function() {
+			return Haxelib.run(args);
+		});
+		if(target == "flash" || target == "html5" || target == "neko") {
+			process.stdout.write("Building unit tests...\n");
+			process.stdout.write("\n");
+			return OpenFL.build("unit",target);
+		} else {
+			process.stdout.write("Running unit tests...\n");
+			process.stdout.write("\n");
+			return OpenFL.run("test","unit",target,"travis");
+		}
+	}
+	static buildCoverageTests(target) {
+		process.stdout.write("\nBuilding coverage tests...\n");
+		process.stdout.write("\n");
+		var target1 = target;
+		var target2 = target;
+		return Command.runAll([function() {
+			return OpenFL.build("coverage",target1,"coverage1");
+		},function() {
+			return OpenFL.build("coverage",target2,"coverage2");
+		}]);
+	}
+	static buildDemos(target,demos) {
+		process.stdout.write("\nBuilding demos...\n");
+		process.stdout.write("\n");
+		return Flixel.buildProjects(target,demos);
+	}
+	static buildSnippetsDemos(target) {
+		process.stdout.write("\nBuilding mechanics demos...\n");
+		process.stdout.write("\n");
+		Command.run("git",["clone","https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
+		return Flixel.buildProjects(target,["-dir","haxeflixel-mechanics"]);
+	}
+	static buildSwfVersionTests(target) {
+		process.stdout.write("\nBuilding swf version tests...\n");
+		process.stdout.write("\n");
+		var target1 = target;
+		var target2 = target;
+		return Command.runAll([function() {
+			return OpenFL.build("swfVersion/11",target1);
+		},function() {
+			return OpenFL.build("swfVersion/11_2",target2);
+		}]);
+	}
+}
+Tests.__name__ = true;
+class haxe_io_Bytes {
+}
+haxe_io_Bytes.__name__ = true;
 class js__$Boot_HaxeError extends Error {
 	constructor(val) {
 		super();
@@ -908,6 +907,7 @@ Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function()
 }});
 js_Boot.__toStr = ({ }).toString;
 Command.dryRun = false;
+Main.HaxelibRepo = haxe_io_Path.join([process.env["HOME"],"haxe/haxelib"]);
 Tests.ImportantDemos = ["Mode"];
 Main.main();
 })({});
