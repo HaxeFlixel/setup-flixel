@@ -459,6 +459,7 @@ Main.main = function() {
 	Core.getInput("flixel-versions");
 	var target = Core.getInput("target");
 	Core.getInput("runTests");
+	Core.startGroup("Installing Haxelibs");
 	var haxeVersion1 = haxeVersion;
 	var target1 = target;
 	if(Command.runUntilFailure([function() {
@@ -468,7 +469,10 @@ Main.main = function() {
 	}]) != 0) {
 		process.exit(1);
 	}
+	Core.endGroup();
+	Core.startGroup("Listing Haxelibs");
 	Command.run("haxelib list");
+	Core.endGroup();
 };
 Main.setupLix = function(haxeVersion) {
 	js_node_ChildProcess.spawnSync("lix scope",{ shell : true, stdio : "inherit"});

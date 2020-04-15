@@ -13,6 +13,8 @@ enum abstract FlixelVersions(String) {
 @:jsRequire("@actions/core")
 extern class Core {
 	static function getInput(name:String):Dynamic;
+	static function startGroup(name:String):Void;
+	static function endGroup():Void;
 }
 
 class Main {
@@ -22,11 +24,16 @@ class Main {
 		var target:Target = Core.getInput("target");
 		var runTests:Bool = Core.getInput("runTests");
 
+		Core.startGroup("Installing Haxelibs");
 		var installationResult = runUntilFailure([setupLix.bind(haxeVersion), installHaxelibs, installHxcpp.bind(target)]);
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
+		Core.endGroup();
+
+		Core.startGroup("Listing Haxelibs");
 		run("haxelib list");
+		Core.endGroup();
 	}
 
 	static function setupLix(haxeVersion):ExitCode {
