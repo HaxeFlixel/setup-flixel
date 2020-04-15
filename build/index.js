@@ -778,7 +778,7 @@ class Tests {
 		var tmp4 = function() {
 			return Tests.buildSnippetsDemos(target5);
 		};
-		return [{ name : "Running Unit Tests", run : tmp},{ name : "Building Coverage Tests", run : tmp1},{ name : "Building SWF Version Tests", run : tmp2, active : target == "flash"},{ name : "Building flixel-demos", run : tmp3},{ name : "Building snippets.haxeflixel.com Demos", run : tmp4, active : target != "cpp"}];
+		return [{ name : "Running Unit Tests", run : tmp, active : true},{ name : "Building Coverage Tests", run : tmp1, active : true},{ name : "Building SWF Version Tests", run : tmp2, active : target == "flash"},{ name : "Building flixel-demos", run : tmp3, active : true},{ name : "Building snippets.haxeflixel.com Demos", run : tmp4, active : target != "cpp"}];
 	}
 	static runUnitTests(target) {
 		var args = ["munit","gen"];

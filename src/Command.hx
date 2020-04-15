@@ -6,7 +6,7 @@ enum abstract ExitCode(Int) from Int to Int {
 typedef NamedExecution = {
 	final name:String;
 	final run:() -> ExitCode;
-	final ?active:Bool;
+	final active:Bool;
 }
 
 @:publicFields class Command {

@@ -9,11 +9,13 @@ class Tests {
 		return [
 			{
 				name: "Running Unit Tests",
-				run: runUnitTests.bind(target)
+				run: runUnitTests.bind(target),
+				active: true
 			},
 			{
 				name: "Building Coverage Tests",
-				run: buildCoverageTests.bind(target)
+				run: buildCoverageTests.bind(target),
+				active: true
 			},
 			{
 				name: "Building SWF Version Tests",
@@ -22,7 +24,8 @@ class Tests {
 			},
 			{
 				name: "Building flixel-demos",
-				run: buildDemos.bind(target, if (target == Cpp) ImportantDemos else [])
+				run: buildDemos.bind(target, if (target == Cpp) ImportantDemos else []),
+				active: true
 			},
 			{
 				name: "Building snippets.haxeflixel.com Demos",
