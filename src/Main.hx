@@ -15,6 +15,7 @@ extern class Core {
 	static function getInput(name:String):Dynamic;
 	static function startGroup(name:String):Void;
 	static function endGroup():Void;
+	static function exportVariable(name:String, val:String):Void;
 }
 
 class Main {
@@ -34,6 +35,7 @@ class Main {
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
+		Core.exportVariable("HAXELIB_REPO", Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]));
 		Core.endGroup();
 
 		Core.startGroup("Listing Dependencies");

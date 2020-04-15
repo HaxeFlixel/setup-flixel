@@ -474,6 +474,7 @@ Main.main = function() {
 	}]) != 0) {
 		process.exit(1);
 	}
+	Core.exportVariable("HAXELIB_REPO",haxe_io_Path.join([process.env["HOME"],"haxe/haxelib"]));
 	Core.endGroup();
 	Core.startGroup("Listing Dependencies");
 	Command.run("lix -v");
