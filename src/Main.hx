@@ -30,6 +30,7 @@ class Main {
 	}
 
 	static function setupLix(haxeVersion):ExitCode {
+		Sys.command("lix scope");
 		var path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
 		if (!FileSystem.exists(path)) {
 			return Failure;
