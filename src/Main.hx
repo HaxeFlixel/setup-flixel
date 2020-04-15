@@ -27,7 +27,8 @@ class Main {
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
-		Core.exportVariable("HAXELIB_REPO", Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]));
+		var haxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
+		Core.exportVariable("HAXELIB_REPO", haxelibRepo);
 		Core.endGroup();
 
 		Core.startGroup("Listing Dependencies");
@@ -40,6 +41,8 @@ class Main {
 		Core.endGroup();
 
 		if (runTests) {
+			cd(Path.join([haxelibRepo, "flixel/git"]));
+
 			putEnv("HXCPP_SILENT", "1");
 			putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 			putEnv("HXCPP_CACHE_MB", "5000");

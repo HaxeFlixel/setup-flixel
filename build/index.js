@@ -503,7 +503,8 @@ Main.main = function() {
 	}]) != 0) {
 		process.exit(1);
 	}
-	Core.exportVariable("HAXELIB_REPO",haxe_io_Path.join([process.env["HOME"],"haxe/haxelib"]));
+	var haxelibRepo = haxe_io_Path.join([process.env["HOME"],"haxe/haxelib"]);
+	Core.exportVariable("HAXELIB_REPO",haxelibRepo);
 	Core.endGroup();
 	Core.startGroup("Listing Dependencies");
 	Command.run("lix -v");
@@ -514,6 +515,7 @@ Main.main = function() {
 	Command.run("haxelib list");
 	Core.endGroup();
 	if(runTests) {
+		Command.cd(haxe_io_Path.join([haxelibRepo,"flixel/git"]));
 		Command.putEnv("HXCPP_SILENT","1");
 		Command.putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
 		Command.putEnv("HXCPP_CACHE_MB","5000");
