@@ -646,6 +646,8 @@ class Main {
 		var libs = [function() {
 			return Haxelib.install("munit");
 		},function() {
+			return Haxelib.install("hamcrest");
+		},function() {
 			return Haxelib.install("systools");
 		},function() {
 			return Haxelib.install("task");
@@ -698,9 +700,9 @@ class Main {
 			return 0;
 		}
 		var hxcppDir = haxe_io_Path.join([Main.HaxelibRepo,"hxcpp/git/"]);
-		var dir = hxcppDir + "tools/run";
+		var dir = hxcppDir + "/tools/run";
 		var args = ["compile.hxml"];
-		var dir1 = hxcppDir + "tools/hxcpp";
+		var dir1 = hxcppDir + "/tools/hxcpp";
 		var args1 = ["compile.hxml"];
 		return Command.runAll([function() {
 			return Haxelib.git("HaxeFoundation","hxcpp");

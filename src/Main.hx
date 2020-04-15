@@ -67,6 +67,7 @@ class Main {
 		// @formatter:off
 		var libs = [
 			Haxelib.install.bind("munit"), 
+			Haxelib.install.bind("hamcrest"), 
 			Haxelib.install.bind("systools"),
 			Haxelib.install.bind("task"),
 			Haxelib.install.bind("poly2trihx"),
@@ -109,8 +110,8 @@ class Main {
 		final hxcppDir = Path.join([HaxelibRepo, "hxcpp/git/"]);
 		return runAll([
 			Haxelib.git.bind("HaxeFoundation", "hxcpp"),
-			runInDir.bind(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
-			runInDir.bind(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
+			runInDir.bind(hxcppDir + "/tools/run", "haxe", ["compile.hxml"]),
+			runInDir.bind(hxcppDir + "/tools/hxcpp", "haxe", ["compile.hxml"]),
 		]);
 	}
 }
