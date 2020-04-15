@@ -1,0 +1,21 @@
+name: Setup Flixel
+description: Setup Flixel
+branding:
+  icon: 'package'
+  color: 'blue'
+inputs:
+  haxe-version:
+    description: 'Version of Haxe to use'
+    required: true
+  flixel-versions: 
+    description: 'Version of Flixel libs to use'
+    required: true
+  target:
+    description: 'Which target to use'
+    required: true
+  run-tests:
+    description: 'Whether to run flixel tests'
+    required: false
+runs:
+  using: 'node12'
+  main: 'build/index.js'

@@ -1,0 +1,11 @@
+{
+	"devDependencies": {
+		"lix": "^15.8.11",
+		"@actions/core": "^1.2.3",
+		"@zeit/ncc": "^0.21.1"
+	},
+	"scripts": {
+		"postinstall": "lix download",
+		"build": "ncc build build/haxe-output.js -o build"
+	}
+}

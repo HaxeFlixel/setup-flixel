@@ -1,0 +1,7 @@
+-cp src
+-main Main
+-js build/haxe-output.js
+-dce full
+-lib hxnodejs
+-D analyzer-optimize
+-cmd npm run build
