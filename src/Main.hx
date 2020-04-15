@@ -25,7 +25,11 @@ class Main {
 		var runTests:Bool = Core.getInput("runTests");
 
 		Core.startGroup("Installing Haxelibs");
-		var installationResult = runUntilFailure([setupLix.bind(haxeVersion), installHaxelibs, installHxcpp.bind(target)]);
+		var installationResult = runUntilFailure([
+			setupLix.bind(haxeVersion),
+			installHaxelibs.bind(flixelVersions),
+			installHxcpp.bind(target)
+		]);
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
@@ -46,9 +50,9 @@ class Main {
 		return run('lix install haxe $haxeVersion --global');
 	}
 
-	static function installHaxelibs():ExitCode {
+	static function installHaxelibs(flixelVersions):ExitCode {
 		// @formatter:off
-		return runUntilFailure([
+		var libs = [
 			Haxelib.install.bind("munit"), 
 			Haxelib.install.bind("systools"),
 			Haxelib.install.bind("task"),
@@ -61,15 +65,28 @@ class Main {
 
 			Haxelib.install.bind("openfl"),
 			Haxelib.install.bind("lime"),
-
-			Haxelib.git.bind("HaxeFlixel", "flixel"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-tools"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-templates"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-demos"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-addons"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-ui"),
-		]);
+		];
 		// @formatter:on
+		libs = libs.concat(if (flixelVersions == Dev) {
+			[
+				Haxelib.git.bind("HaxeFlixel", "flixel"),
+				Haxelib.git.bind("HaxeFlixel", "flixel-tools"),
+				Haxelib.git.bind("HaxeFlixel", "flixel-templates"),
+				Haxelib.git.bind("HaxeFlixel", "flixel-demos"),
+				Haxelib.git.bind("HaxeFlixel", "flixel-addons"),
+				Haxelib.git.bind("HaxeFlixel", "flixel-ui"),
+			];
+		} else {
+			[
+				Haxelib.install.bind("flixel"),
+				Haxelib.install.bind("flixel-tools"),
+				Haxelib.install.bind("flixel-templates"),
+				Haxelib.install.bind("flixel-demos"),
+				Haxelib.install.bind("flixel-addons"),
+				Haxelib.install.bind("flixel-ui")
+			];
+		});
+		return runUntilFailure(libs);
 	}
 
 	static function installHxcpp(target:Target):ExitCode {

@@ -456,15 +456,18 @@ var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
 	var haxeVersion = Core.getInput("haxe-version");
-	Core.getInput("flixel-versions");
+	var flixelVersions = Core.getInput("flixel-versions");
 	var target = Core.getInput("target");
 	Core.getInput("runTests");
 	Core.startGroup("Installing Haxelibs");
 	var haxeVersion1 = haxeVersion;
+	var flixelVersions1 = flixelVersions;
 	var target1 = target;
 	if(Command.runUntilFailure([function() {
 		return Main.setupLix(haxeVersion1);
-	},Main.installHaxelibs,function() {
+	},function() {
+		return Main.installHaxelibs(flixelVersions1);
+	},function() {
 		return Main.installHxcpp(target1);
 	}]) != 0) {
 		process.exit(1);
@@ -483,8 +486,8 @@ Main.setupLix = function(haxeVersion) {
 	js_node_Fs.writeFileSync(path,"{\"version\": \"stable\", \"resolveLibs\": \"haxelib\"}");
 	return Command.run("lix install haxe " + haxeVersion + " --global");
 };
-Main.installHaxelibs = function() {
-	return Command.runUntilFailure([function() {
+Main.installHaxelibs = function(flixelVersions) {
+	var libs = [function() {
 		return Haxelib.install("munit");
 	},function() {
 		return Haxelib.install("systools");
@@ -506,7 +509,8 @@ Main.installHaxelibs = function() {
 		return Haxelib.install("openfl");
 	},function() {
 		return Haxelib.install("lime");
-	},function() {
+	}];
+	libs = libs.concat(flixelVersions == "dev" ? [function() {
 		return Haxelib.git("HaxeFlixel","flixel");
 	},function() {
 		return Haxelib.git("HaxeFlixel","flixel-tools");
@@ -518,7 +522,20 @@ Main.installHaxelibs = function() {
 		return Haxelib.git("HaxeFlixel","flixel-addons");
 	},function() {
 		return Haxelib.git("HaxeFlixel","flixel-ui");
+	}] : [function() {
+		return Haxelib.install("flixel");
+	},function() {
+		return Haxelib.install("flixel-tools");
+	},function() {
+		return Haxelib.install("flixel-templates");
+	},function() {
+		return Haxelib.install("flixel-demos");
+	},function() {
+		return Haxelib.install("flixel-addons");
+	},function() {
+		return Haxelib.install("flixel-ui");
 	}]);
+	return Command.runUntilFailure(libs);
 };
 Main.installHxcpp = function(target) {
 	if(target != "cpp") {
