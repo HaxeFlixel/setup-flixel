@@ -35,7 +35,7 @@ class Tests {
 	static function runUnitTests(target:Target):ExitCode {
 		runCallbackInDir("unit", Haxelib.run.bind(["munit", "gen"]));
 
-		if (target == Flash || target == Html5 || target == Neko) {
+		if (target == Flash || target == Html5 || target == Neko || target == Hl) {
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
 			// also, neko fails randomly for some reason... (#2148)

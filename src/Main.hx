@@ -5,19 +5,36 @@ import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
 
+using StringTools;
+
 enum abstract FlixelVersions(String) {
 	final Dev = "dev";
 	final Release = "release";
+}
+
+enum abstract HaxeVersion(String) to String {
+	final Latest = "latest";
+	final Stable = "stable";
+	final Nightly = "nightly";
 }
 
 class Main {
 	static final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 
 	static function main() {
-		final haxeVersion:String = Core.getInput("haxe-version");
+		final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
 		final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
 		final target:Target = Core.getInput("target");
 		final runTests:Bool = Core.getInput("run-tests");
+
+		if (runTests) {
+			if (target == Hl && haxeVersion.startsWith("3")) {
+				return; // OpenFL's HL target and Haxe 3 don't work together
+			}
+			if (target == Html5 && haxeVersion == Nightly) {
+				return; // incompatible with OpenFL
+			}
+		}
 
 		Core.startGroup("Installing Haxe Dependencies");
 		final installationResult = runUntilFailure([

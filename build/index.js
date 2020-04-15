@@ -600,6 +600,14 @@ class Main {
 		var flixelVersions = Core.getInput("flixel-versions");
 		var target = Core.getInput("target");
 		var runTests = Core.getInput("run-tests");
+		if(runTests) {
+			if(target == "hl" && StringTools.startsWith(haxeVersion,"3")) {
+				return;
+			}
+			if(target == "html5" && haxeVersion == "nightly") {
+				return;
+			}
+		}
 		Core.startGroup("Installing Haxe Dependencies");
 		var haxeVersion1 = haxeVersion;
 		var flixelVersions1 = flixelVersions;
@@ -737,6 +745,16 @@ class Std {
 	}
 }
 Std.__name__ = true;
+class StringTools {
+	static startsWith(s,start) {
+		if(s.length >= start.length) {
+			return s.lastIndexOf(start,0) == 0;
+		} else {
+			return false;
+		}
+	}
+}
+StringTools.__name__ = true;
 class Tests {
 	static make(target) {
 		var target1 = target;
@@ -767,7 +785,7 @@ class Tests {
 		Command.runCallbackInDir("unit",function() {
 			return Haxelib.run(args);
 		});
-		if(target == "flash" || target == "html5" || target == "neko") {
+		if(target == "flash" || target == "html5" || target == "neko" || target == "hl") {
 			process.stdout.write("Building unit tests...\n");
 			process.stdout.write("\n");
 			return OpenFL.build("unit",target);
