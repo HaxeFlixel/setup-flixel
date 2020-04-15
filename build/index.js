@@ -471,6 +471,7 @@ Main.main = function() {
 	Command.run("haxelib list");
 };
 Main.setupLix = function(haxeVersion) {
+	js_node_ChildProcess.spawnSync("lix scope",{ shell : true, stdio : "inherit"});
 	var path = haxe_io_Path.join([process.env["HOME"],"haxe/.haxerc"]);
 	if(!sys_FileSystem.exists(path)) {
 		return 1;
