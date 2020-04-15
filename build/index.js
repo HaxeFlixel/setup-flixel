@@ -442,6 +442,15 @@ Haxelib.git = function(user,lib,branch,path) {
 	args.push("--quiet");
 	return Command.run("haxelib",args);
 };
+var HxOverrides = function() { };
+HxOverrides.__name__ = true;
+HxOverrides.cca = function(s,index) {
+	var x = s.charCodeAt(index);
+	if(x != x) {
+		return undefined;
+	}
+	return x;
+};
 var Core = __webpack_require__(470);
 var Main = function() { };
 Main.__name__ = true;
@@ -450,16 +459,24 @@ Main.main = function() {
 	Core.getInput("flixel-versions");
 	var target = Core.getInput("target");
 	Core.getInput("runTests");
-	var cmd = "lix install haxe " + haxeVersion + " --global";
+	var haxeVersion1 = haxeVersion;
 	var target1 = target;
 	if(Command.runUntilFailure([function() {
-		return Command.run(cmd);
+		return Main.setupLix(haxeVersion1);
 	},Main.installHaxelibs,function() {
 		return Main.installHxcpp(target1);
 	}]) != 0) {
 		process.exit(1);
 	}
 	Command.run("haxelib list");
+};
+Main.setupLix = function(haxeVersion) {
+	var path = haxe_io_Path.join([process.env["HOME"],"haxe/.haxerc"]);
+	if(!sys_FileSystem.exists(path)) {
+		return 1;
+	}
+	js_node_Fs.writeFileSync(path,"{\"version\": \"stable\", \"resolveLibs\": \"haxelib\"}");
+	return Command.run("lix install haxe " + haxeVersion + " --global");
 };
 Main.installHaxelibs = function() {
 	return Command.runUntilFailure([function() {
@@ -521,6 +538,117 @@ Std.string = function(s) {
 };
 var haxe_io_Bytes = function() { };
 haxe_io_Bytes.__name__ = true;
+var haxe_io_Path = function() { };
+haxe_io_Path.__name__ = true;
+haxe_io_Path.join = function(paths) {
+	var _g = [];
+	var _g1 = 0;
+	while(_g1 < paths.length) {
+		var v = paths[_g1];
+		++_g1;
+		if(v != null && v != "") {
+			_g.push(v);
+		}
+	}
+	if(_g.length == 0) {
+		return "";
+	}
+	var path = _g[0];
+	var _g2 = 1;
+	var _g11 = _g.length;
+	while(_g2 < _g11) {
+		path = haxe_io_Path.addTrailingSlash(path);
+		path += _g[_g2++];
+	}
+	return haxe_io_Path.normalize(path);
+};
+haxe_io_Path.normalize = function(path) {
+	var slash = "/";
+	path = path.split("\\").join(slash);
+	if(path == slash) {
+		return slash;
+	}
+	var target = [];
+	var _g = 0;
+	var _g1 = path.split(slash);
+	while(_g < _g1.length) {
+		var token = _g1[_g];
+		++_g;
+		if(token == ".." && target.length > 0 && target[target.length - 1] != "..") {
+			target.pop();
+		} else if(token == "") {
+			if(target.length > 0 || HxOverrides.cca(path,0) == 47) {
+				target.push(token);
+			}
+		} else if(token != ".") {
+			target.push(token);
+		}
+	}
+	var acc_b = "";
+	var colon = false;
+	var slashes = false;
+	var _g2_offset = 0;
+	var _g2_s = target.join(slash);
+	while(_g2_offset < _g2_s.length) {
+		var s = _g2_s;
+		var index = _g2_offset++;
+		var c = s.charCodeAt(index);
+		if(c >= 55296 && c <= 56319) {
+			c = c - 55232 << 10 | s.charCodeAt(index + 1) & 1023;
+		}
+		var c1 = c;
+		if(c1 >= 65536) {
+			++_g2_offset;
+		}
+		var c2 = c1;
+		switch(c2) {
+		case 47:
+			if(!colon) {
+				slashes = true;
+			} else {
+				var i = c2;
+				colon = false;
+				if(slashes) {
+					acc_b += "/";
+					slashes = false;
+				}
+				acc_b += String.fromCodePoint(i);
+			}
+			break;
+		case 58:
+			acc_b += ":";
+			colon = true;
+			break;
+		default:
+			var i1 = c2;
+			colon = false;
+			if(slashes) {
+				acc_b += "/";
+				slashes = false;
+			}
+			acc_b += String.fromCodePoint(i1);
+		}
+	}
+	return acc_b;
+};
+haxe_io_Path.addTrailingSlash = function(path) {
+	if(path.length == 0) {
+		return "/";
+	}
+	var c1 = path.lastIndexOf("/");
+	var c2 = path.lastIndexOf("\\");
+	if(c1 < c2) {
+		if(c2 != path.length - 1) {
+			return path + "\\";
+		} else {
+			return path;
+		}
+	} else if(c1 != path.length - 1) {
+		return path + "/";
+	} else {
+		return path;
+	}
+};
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
@@ -600,6 +728,18 @@ js_Boot.__string_rec = function(o,s) {
 	}
 };
 var js_node_ChildProcess = __webpack_require__(129);
+var js_node_Fs = __webpack_require__(747);
+var sys_FileSystem = function() { };
+sys_FileSystem.__name__ = true;
+sys_FileSystem.exists = function(path) {
+	try {
+		js_node_Fs.accessSync(path);
+		return true;
+	} catch( _ ) {
+		return false;
+	}
+};
+if( String.fromCodePoint == null ) String.fromCodePoint = function(c) { return c < 0x10000 ? String.fromCharCode(c) : String.fromCharCode((c>>10)+0xD7C0)+String.fromCharCode((c&0x3FF)+0xDC00); }
 String.__name__ = true;
 Array.__name__ = true;
 Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function() {
@@ -617,6 +757,13 @@ Main.main();
 /***/ (function(module) {
 
 module.exports = require("path");
+
+/***/ }),
+
+/***/ 747:
+/***/ (function(module) {
+
+module.exports = require("fs");
 
 /***/ })
 

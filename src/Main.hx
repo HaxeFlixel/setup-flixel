@@ -1,3 +1,6 @@
+import sys.io.File;
+import sys.FileSystem;
+import haxe.io.Path;
 import Command.ExitCode;
 import Command.*;
 import OpenFL.Target;
@@ -19,15 +22,20 @@ class Main {
 		var target:Target = Core.getInput("target");
 		var runTests:Bool = Core.getInput("runTests");
 
-		var installationResult = runUntilFailure([
-			run.bind('lix install haxe $haxeVersion --global'),
-			installHaxelibs,
-			installHxcpp.bind(target)
-		]);
+		var installationResult = runUntilFailure([setupLix.bind(haxeVersion), installHaxelibs, installHxcpp.bind(target)]);
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
 		run("haxelib list");
+	}
+
+	static function setupLix(haxeVersion):ExitCode {
+		var path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
+		if (!FileSystem.exists(path)) {
+			return Failure;
+		}
+		File.saveContent(path, '{"version": "stable", "resolveLibs": "haxelib"}');
+		return run('lix install haxe $haxeVersion --global');
 	}
 
 	static function installHaxelibs():ExitCode {
