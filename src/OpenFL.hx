@@ -1,11 +1,11 @@
 import Command.ExitCode;
 
 enum abstract Target(String) to String {
-	var Flash = "flash";
-	var Neko = "neko";
-	var Cpp = "cpp";
-	var Html5 = "html5";
-	var Hl = "hl";
+	final Flash = "flash";
+	final Neko = "neko";
+	final Cpp = "cpp";
+	final Html5 = "html5";
+	final Hl = "hl";
 }
 
 @:publicFields class OpenFL {
@@ -14,7 +14,7 @@ enum abstract Target(String) to String {
 	}
 
 	static function run(operation:String, path:String, target:Target, ?define:String):ExitCode {
-		var args = ["openfl", operation, path, target];
+		final args = ["openfl", operation, path, target];
 		if (define != null) {
 			args.push('-D$define');
 		}

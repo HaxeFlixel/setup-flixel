@@ -1,6 +1,6 @@
 enum abstract ExitCode(Int) from Int to Int {
-	var Success = 0;
-	var Failure = 1;
+	final Success = 0;
+	final Failure = 1;
 }
 
 typedef NamedExecution = {
@@ -10,16 +10,16 @@ typedef NamedExecution = {
 }
 
 @:publicFields class Command {
-	static var dryRun:Bool = false;
+	static final dryRun:Bool = false;
 
 	static function runInDir(dir:String, cmd:String, args:Array<String>):ExitCode {
 		return runCallbackInDir(dir, run.bind(cmd, args));
 	}
 
 	static function runCallbackInDir(dir:String, func:() -> ExitCode):ExitCode {
-		var oldCwd = Sys.getCwd();
+		final oldCwd = Sys.getCwd();
 		cd(dir);
-		var result = func();
+		final result = func();
 		cd(oldCwd);
 		return result;
 	}

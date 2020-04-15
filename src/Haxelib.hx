@@ -6,7 +6,7 @@ import Command.ExitCode;
 	}
 
 	static function install(lib:String, ?version:String):ExitCode {
-		var args = ["install", lib];
+		final args = ["install", lib];
 		if (version != null) {
 			args.push(version);
 		}
@@ -15,7 +15,7 @@ import Command.ExitCode;
 	}
 
 	static function git(user:String, lib:String, ?branch:String, ?path:String):ExitCode {
-		var args = ["git", lib, 'https://github.com/$user/$lib'];
+		final args = ["git", lib, 'https://github.com/$user/$lib'];
 		if (branch != null) {
 			args.push(branch);
 		}

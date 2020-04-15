@@ -6,19 +6,19 @@ import sys.FileSystem;
 import sys.io.File;
 
 enum abstract FlixelVersions(String) {
-	var Dev = "dev";
-	var Release = "release";
+	final Dev = "dev";
+	final Release = "release";
 }
 
 class Main {
 	static function main() {
-		var haxeVersion:String = Core.getInput("haxe-version");
-		var flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
-		var target:Target = Core.getInput("target");
-		var runTests:Bool = Core.getInput("runTests");
+		final haxeVersion:String = Core.getInput("haxe-version");
+		final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
+		final target:Target = Core.getInput("target");
+		final runTests:Bool = Core.getInput("runTests");
 
 		Core.startGroup("Installing Haxe Dependencies");
-		var installationResult = runUntilFailure([
+		final installationResult = runUntilFailure([
 			setupLix.bind(haxeVersion),
 			run.bind("sudo apt install neko"), // for nekotools
 			installHaxelibs.bind(flixelVersions),
@@ -27,7 +27,7 @@ class Main {
 		if (installationResult != Success) {
 			Sys.exit(Failure);
 		}
-		var haxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
+		final haxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 		Core.exportVariable("HAXELIB_REPO", haxelibRepo);
 		Core.endGroup();
 
@@ -53,7 +53,7 @@ class Main {
 
 	static function setupLix(haxeVersion):ExitCode {
 		Sys.command("lix scope");
-		var path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
+		final path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
 		if (!FileSystem.exists(path)) {
 			return Failure;
 		}
@@ -104,7 +104,7 @@ class Main {
 		if (target != Cpp) {
 			return Success;
 		}
-		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
+		final hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return runAll([
 			Haxelib.git.bind("HaxeFoundation", "hxcpp"),
 			runInDir.bind(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
