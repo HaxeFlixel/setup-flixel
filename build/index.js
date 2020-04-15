@@ -408,6 +408,20 @@ Command.runAll = function(methods) {
 	}
 	return result;
 };
+Command.runAllNamed = function(methods) {
+	var result = 0;
+	var _g = 0;
+	while(_g < methods.length) {
+		var method = methods[_g];
+		++_g;
+		Core.startGroup(method.name);
+		if(method.run() != 0) {
+			result = 1;
+		}
+		Core.endGroup();
+	}
+	return result;
+};
 Command.run = function(cmd,args) {
 	var v = args == null ? "" : args.join(" ");
 	process.stdout.write(Std.string("> " + cmd + " " + v));
@@ -421,8 +435,24 @@ Command.run = function(cmd,args) {
 		return js_node_ChildProcess.spawnSync(cmd,args,{ stdio : "inherit"}).status;
 	}
 };
+Command.putEnv = function(s,v) {
+	process.stdout.write(Std.string("Sys.putEnv(\"" + s + "\", \"" + v + "\")"));
+	process.stdout.write("\n");
+	if(!Command.dryRun) {
+		process.env[s] = v;
+	}
+};
+var Core = __webpack_require__(470);
+var Flixel = function() { };
+Flixel.__name__ = true;
+Flixel.buildProjects = function(target,args) {
+	return Haxelib.run(["flixel-tools","bp",target].concat(args).concat(["-Dno-deprecation-warnings"]));
+};
 var Haxelib = function() { };
 Haxelib.__name__ = true;
+Haxelib.run = function(args) {
+	return Command.run("haxelib",["run"].concat(args));
+};
 Haxelib.install = function(lib,version) {
 	var args = ["install",lib];
 	if(version != null) {
@@ -451,14 +481,13 @@ HxOverrides.cca = function(s,index) {
 	}
 	return x;
 };
-var Core = __webpack_require__(470);
 var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
 	var haxeVersion = Core.getInput("haxe-version");
 	var flixelVersions = Core.getInput("flixel-versions");
 	var target = Core.getInput("target");
-	Core.getInput("runTests");
+	var runTests = Core.getInput("runTests");
 	Core.startGroup("Installing Haxe Dependencies");
 	var haxeVersion1 = haxeVersion;
 	var flixelVersions1 = flixelVersions;
@@ -484,6 +513,13 @@ Main.main = function() {
 	Command.run("haxelib config");
 	Command.run("haxelib list");
 	Core.endGroup();
+	if(runTests) {
+		Command.putEnv("HXCPP_SILENT","1");
+		Command.putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
+		Command.putEnv("HXCPP_CACHE_MB","5000");
+		var code = Command.runAllNamed(Tests.make(target));
+		process.exit(code);
+	}
 };
 Main.setupLix = function(haxeVersion) {
 	js_node_ChildProcess.spawnSync("lix scope",{ shell : true, stdio : "inherit"});
@@ -563,10 +599,96 @@ Main.installHxcpp = function(target) {
 	}]);
 };
 Math.__name__ = true;
+var OpenFL = function() { };
+OpenFL.__name__ = true;
+OpenFL.build = function(path,target,define) {
+	return OpenFL.run("build",path,target,define);
+};
+OpenFL.run = function(operation,path,target,define) {
+	var args = ["openfl",operation,path,target];
+	if(define != null) {
+		args.push("-D" + define);
+	}
+	return Haxelib.run(args);
+};
 var Std = function() { };
 Std.__name__ = true;
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
+};
+var Tests = function() { };
+Tests.__name__ = true;
+Tests.make = function(target) {
+	var target1 = target;
+	var tmp = function() {
+		return Tests.runUnitTests(target1);
+	};
+	var target2 = target;
+	var tmp1 = function() {
+		return Tests.buildCoverageTests(target2);
+	};
+	var target3 = target;
+	var tmp2 = function() {
+		return Tests.buildSwfVersionTests(target3);
+	};
+	var target4 = target;
+	var demos = target == "cpp" ? Tests.ImportantDemos : [];
+	var tmp3 = function() {
+		return Tests.buildDemos(target4,demos);
+	};
+	var target5 = target;
+	var tmp4 = function() {
+		return Tests.buildSnippetsDemos(target5);
+	};
+	return [{ name : "Running Unit Tests", run : tmp},{ name : "Building Coverage Tests", run : tmp1},{ name : "Building SWF Version Tests", run : tmp2, active : target == "flash"},{ name : "Building flixel-demos", run : tmp3},{ name : "Building snippets.haxeflixel.com Demos", run : tmp4, active : target != "cpp"}];
+};
+Tests.runUnitTests = function(target) {
+	var args = ["munit","gen"];
+	Command.runCallbackInDir("unit",function() {
+		return Haxelib.run(args);
+	});
+	if(target == "flash" || target == "html5" || target == "neko") {
+		process.stdout.write("Building unit tests...\n");
+		process.stdout.write("\n");
+		return OpenFL.build("unit",target);
+	} else {
+		process.stdout.write("Running unit tests...\n");
+		process.stdout.write("\n");
+		return OpenFL.run("test","unit",target,"travis");
+	}
+};
+Tests.buildCoverageTests = function(target) {
+	process.stdout.write("\nBuilding coverage tests...\n");
+	process.stdout.write("\n");
+	var target1 = target;
+	var target2 = target;
+	return Command.runAll([function() {
+		return OpenFL.build("coverage",target1,"coverage1");
+	},function() {
+		return OpenFL.build("coverage",target2,"coverage2");
+	}]);
+};
+Tests.buildDemos = function(target,demos) {
+	process.stdout.write("\nBuilding demos...\n");
+	process.stdout.write("\n");
+	return Flixel.buildProjects(target,demos);
+};
+Tests.buildSnippetsDemos = function(target) {
+	process.stdout.write("\nBuilding mechanics demos...\n");
+	process.stdout.write("\n");
+	Command.run("git",["clone","https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
+	return Flixel.buildProjects(target,["-dir","haxeflixel-mechanics"]);
+};
+Tests.buildSwfVersionTests = function(target) {
+	process.stdout.write("\nBuilding swf version tests...\n");
+	process.stdout.write("\n");
+	var target1 = target;
+	var target2 = target;
+	return Command.runAll([function() {
+		return OpenFL.build("swfVersion/11",target1);
+	},function() {
+		return OpenFL.build("swfVersion/11_2",target2);
+	}]);
 };
 var haxe_io_Bytes = function() { };
 haxe_io_Bytes.__name__ = true;
@@ -779,6 +901,7 @@ Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function()
 }});
 js_Boot.__toStr = ({ }).toString;
 Command.dryRun = false;
+Tests.ImportantDemos = ["Mode"];
 Main.main();
 })({});
 

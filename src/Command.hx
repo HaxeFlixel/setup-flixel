@@ -3,6 +3,12 @@ enum abstract ExitCode(Int) from Int to Int {
 	var Failure = 1;
 }
 
+typedef NamedExecution = {
+	final name:String;
+	final run:() -> ExitCode;
+	final ?active:Bool;
+}
+
 @:publicFields class Command {
 	static var dryRun:Bool = false;
 
@@ -44,11 +50,30 @@ enum abstract ExitCode(Int) from Int to Int {
 		return result;
 	}
 
+	static function runAllNamed(methods:Array<NamedExecution>):ExitCode {
+		var result = Success;
+		for (method in methods) {
+			Core.startGroup(method.name);
+			if (method.run() != Success) {
+				result = Failure;
+			}
+			Core.endGroup();
+		}
+		return result;
+	}
+
 	static function run(cmd:String, ?args:Array<String>):ExitCode {
 		Sys.println("> " + cmd + " " + (if (args == null) "" else args.join(" ")));
 		if (dryRun) {
 			return ExitCode.Success;
 		}
 		return Sys.command(cmd, args);
+	}
+
+	static function putEnv(s:String, v:String) {
+		Sys.println('Sys.putEnv("$s", "$v")');
+		if (!dryRun) {
+			Sys.putEnv(s, v);
+		}
 	}
 }

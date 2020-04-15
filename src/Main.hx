@@ -1,21 +1,13 @@
-import sys.io.File;
-import sys.FileSystem;
-import haxe.io.Path;
-import Command.ExitCode;
 import Command.*;
+import Command.ExitCode;
 import OpenFL.Target;
+import haxe.io.Path;
+import sys.FileSystem;
+import sys.io.File;
 
 enum abstract FlixelVersions(String) {
 	var Dev = "dev";
 	var Release = "release";
-}
-
-@:jsRequire("@actions/core")
-extern class Core {
-	static function getInput(name:String):Dynamic;
-	static function startGroup(name:String):Void;
-	static function endGroup():Void;
-	static function exportVariable(name:String, val:String):Void;
 }
 
 class Main {
@@ -46,6 +38,14 @@ class Main {
 		run("haxelib config");
 		run("haxelib list");
 		Core.endGroup();
+
+		if (runTests) {
+			putEnv("HXCPP_SILENT", "1");
+			putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
+			putEnv("HXCPP_CACHE_MB", "5000");
+
+			Sys.exit(runAllNamed(Tests.make(target)));
+		}
 	}
 
 	static function setupLix(haxeVersion):ExitCode {

@@ -5,6 +5,7 @@ enum abstract Target(String) to String {
 	var Neko = "neko";
 	var Cpp = "cpp";
 	var Html5 = "html5";
+	var Hl = "hl";
 }
 
 @:publicFields class OpenFL {
