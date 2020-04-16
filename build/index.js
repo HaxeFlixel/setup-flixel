@@ -785,7 +785,7 @@ class Tests {
 		Command.runCallbackInDir("unit",function() {
 			return Haxelib.run(args);
 		});
-		if(target == "flash" || target == "html5" || target == "neko" || target == "hl") {
+		if(target == "flash" || target == "html5" || target == "hl") {
 			process.stdout.write("Building unit tests...\n");
 			process.stdout.write("\n");
 			return OpenFL.build("unit",target);
