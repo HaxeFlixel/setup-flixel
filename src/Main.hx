@@ -25,7 +25,7 @@ class Main {
 		final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
 		final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
 		final target:Target = Core.getInput("target");
-		final runTests:Bool = Core.getInput("run-tests");
+		final runTests:Bool = Core.getInput("run-tests") == "true";
 
 		if (runTests) {
 			if (target == Hl && haxeVersion.startsWith("3")) {

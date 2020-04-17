@@ -599,7 +599,7 @@ class Main {
 		var haxeVersion = Core.getInput("haxe-version");
 		var flixelVersions = Core.getInput("flixel-versions");
 		var target = Core.getInput("target");
-		var runTests = Core.getInput("run-tests");
+		var runTests = Core.getInput("run-tests") == "true";
 		if(runTests) {
 			if(target == "hl" && StringTools.startsWith(haxeVersion,"3")) {
 				return;
