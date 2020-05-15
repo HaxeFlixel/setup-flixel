@@ -1,3 +1,5 @@
+import actions.Core;
+
 enum abstract ExitCode(Int) from Int to Int {
 	final Success = 0;
 	final Failure = 1;

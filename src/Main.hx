@@ -1,18 +1,19 @@
 import Command.*;
 import Command.ExitCode;
 import OpenFL.Target;
+import actions.Core;
 import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
 
 using StringTools;
 
-enum abstract FlixelVersions(String) {
+enum abstract FlixelVersions(String) from String {
 	final Dev = "dev";
 	final Release = "release";
 }
 
-enum abstract HaxeVersion(String) to String {
+enum abstract HaxeVersion(String) from String to String {
 	final Latest = "latest";
 	final Stable = "stable";
 	final Nightly = "nightly";

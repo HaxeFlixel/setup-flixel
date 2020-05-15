@@ -1,11 +1,12 @@
 {
 	"devDependencies": {
-		"lix": "^15.8.11",
 		"@actions/core": "^1.2.3",
-		"@zeit/ncc": "^0.21.1"
+		"@zeit/ncc": "^0.21.1",
+		"dts2hx": "^0.6.0",
+		"lix": "^15.8.11"
 	},
 	"scripts": {
-		"postinstall": "lix download",
+		"postinstall": "lix download && dts2hx @actions/core",
 		"build": "haxe --run Build"
 	}
 }

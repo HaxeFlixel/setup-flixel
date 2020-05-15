@@ -1,6 +1,6 @@
 import Command.ExitCode;
 
-enum abstract Target(String) to String {
+enum abstract Target(String) from String to String {
 	final Flash = "flash";
 	final Neko = "neko";
 	final Cpp = "cpp";

@@ -410,11 +410,11 @@ class Command {
 			if(!method.active) {
 				continue;
 			}
-			Core.startGroup(method.name);
+			actions_Core.startGroup(method.name);
 			if(method.run() != 0) {
 				result = 1;
 			}
-			Core.endGroup();
+			actions_Core.endGroup();
 		}
 		return result;
 	}
@@ -440,7 +440,6 @@ class Command {
 	}
 }
 Command.__name__ = true;
-var Core = __webpack_require__(470);
 class Flixel {
 	static buildProjects(target,args) {
 		return Haxelib.run(["flixel-tools","bp",target].concat(args).concat(["-Dno-deprecation-warnings"]));
@@ -596,10 +595,10 @@ class haxe_io_Path {
 haxe_io_Path.__name__ = true;
 class Main {
 	static main() {
-		var haxeVersion = Core.getInput("haxe-version");
-		var flixelVersions = Core.getInput("flixel-versions");
-		var target = Core.getInput("target");
-		var runTests = Core.getInput("run-tests") == "true";
+		var haxeVersion = actions_Core.getInput("haxe-version");
+		var flixelVersions = actions_Core.getInput("flixel-versions");
+		var target = actions_Core.getInput("target");
+		var runTests = actions_Core.getInput("run-tests") == "true";
 		if(runTests) {
 			if(target == "hl" && StringTools.startsWith(haxeVersion,"3")) {
 				return;
@@ -608,7 +607,7 @@ class Main {
 				return;
 			}
 		}
-		Core.startGroup("Installing Haxe Dependencies");
+		actions_Core.startGroup("Installing Haxe Dependencies");
 		var haxeVersion1 = haxeVersion;
 		var flixelVersions1 = flixelVersions;
 		var target1 = target;
@@ -623,23 +622,23 @@ class Main {
 		}]) != 0) {
 			process.exit(1);
 		}
-		Core.exportVariable("HAXELIB_REPO",Main.HaxelibRepo);
-		Core.endGroup();
-		Core.startGroup("Listing Dependencies");
+		actions_Core.exportVariable("HAXELIB_REPO",Main.HaxelibRepo);
+		actions_Core.endGroup();
+		actions_Core.startGroup("Listing Dependencies");
 		Command.run("lix -v");
 		Command.run("haxe -version");
 		Command.run("neko -version");
 		Command.run("haxelib version");
 		Command.run("haxelib config");
 		Command.run("haxelib list");
-		Core.endGroup();
+		actions_Core.endGroup();
 		if(runTests) {
-			Core.startGroup("Test Preparation");
+			actions_Core.startGroup("Test Preparation");
 			Command.cd(haxe_io_Path.join([Main.HaxelibRepo,"flixel/git/tests"]));
 			Command.putEnv("HXCPP_SILENT","1");
 			Command.putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
 			Command.putEnv("HXCPP_CACHE_MB","5000");
-			Core.endGroup();
+			actions_Core.endGroup();
 			var code = Command.runAllNamed(Tests.make(target));
 			process.exit(code);
 		}
@@ -830,6 +829,7 @@ class Tests {
 	}
 }
 Tests.__name__ = true;
+var actions_Core = __webpack_require__(470);
 class haxe_io_Bytes {
 }
 haxe_io_Bytes.__name__ = true;
