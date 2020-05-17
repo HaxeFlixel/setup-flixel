@@ -80,23 +80,23 @@ private function setupLix(haxeVersion):ExitCode {
 }
 
 private function installHaxelibs(flixelVersions):ExitCode {
-		// @formatter:off
-		var libs = [
-			Haxelib.install.bind("munit"), 
-			Haxelib.install.bind("hamcrest"), 
-			Haxelib.install.bind("systools"),
-			Haxelib.install.bind("task"),
-			Haxelib.install.bind("poly2trihx"),
-			Haxelib.install.bind("nape-haxe4"),
-			Haxelib.git.bind("HaxeFoundation", "hscript"),
-			Haxelib.git.bind("larsiusprime", "firetongue"),
-			Haxelib.git.bind("bendmorris", "spinehaxe"),
-			Haxelib.git.bind("larsiusprime", "steamwrap"),
+	// @formatter:off
+	var libs = [
+		Haxelib.install.bind("munit"), 
+		Haxelib.install.bind("hamcrest"), 
+		Haxelib.install.bind("systools"),
+		Haxelib.install.bind("task"),
+		Haxelib.install.bind("poly2trihx"),
+		Haxelib.install.bind("nape-haxe4"),
+		Haxelib.git.bind("HaxeFoundation", "hscript"),
+		Haxelib.git.bind("larsiusprime", "firetongue"),
+		Haxelib.git.bind("bendmorris", "spinehaxe"),
+		Haxelib.git.bind("larsiusprime", "steamwrap"),
 
-			Haxelib.install.bind("openfl"),
-			Haxelib.install.bind("lime"),
-		];
-		// @formatter:on
+		Haxelib.git.bind("openfl", "openfl"),
+		Haxelib.install.bind("lime"),
+	];
+	// @formatter:on
 	libs = libs.concat(if (flixelVersions == Dev) {
 		[
 			Haxelib.git.bind("HaxeFlixel", "flixel"),
