@@ -30,9 +30,6 @@ function main() {
 		if (target == Hl && haxeVersion.startsWith("3")) {
 			return; // OpenFL's HL target and Haxe 3 don't work together
 		}
-		if (target == Html5 && haxeVersion == Nightly) {
-			return; // incompatible with OpenFL
-		}
 	}
 
 	Core.startGroup("Installing Haxe Dependencies");
