@@ -90,7 +90,7 @@ private function installHaxelibs(flixelVersions):ExitCode {
 		Haxelib.git.bind("bendmorris", "spinehaxe"),
 		Haxelib.git.bind("larsiusprime", "steamwrap"),
 
-		Haxelib.git.bind("openfl", "openfl"),
+		Haxelib.install.bind("openfl"),
 		Haxelib.install.bind("lime"),
 	];
 	// @formatter:on
