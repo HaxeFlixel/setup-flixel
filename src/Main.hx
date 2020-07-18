@@ -30,6 +30,9 @@ function main() {
 		if (target == Hl && haxeVersion.startsWith("3")) {
 			return; // OpenFL's HL target and Haxe 3 don't work together
 		}
+		if (haxeVersion == Nightly) {
+			return; // Lime is not compatible with Haxe nightly builds right now
+		}
 	}
 
 	Core.startGroup("Installing Haxe Dependencies");

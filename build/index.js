@@ -596,6 +596,9 @@ function Main_main() {
 		if(target == "hl" && StringTools.startsWith(haxeVersion,"3")) {
 			return;
 		}
+		if(haxeVersion == "nightly") {
+			return;
+		}
 	}
 	actions_Core.startGroup("Installing Haxe Dependencies");
 	let haxeVersion1 = haxeVersion;
