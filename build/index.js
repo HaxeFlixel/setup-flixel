@@ -662,7 +662,9 @@ function Main_installHaxelibs(flixelVersions) {
 	let user3 = "larsiusprime";
 	let lib9 = "steamwrap";
 	let lib10 = "openfl";
+	let version = "8.9.7";
 	let lib11 = "lime";
+	let version1 = "7.8.0";
 	let libs = [function() {
 		return Haxelib_install(lib);
 	},function() {
@@ -684,9 +686,9 @@ function Main_installHaxelibs(flixelVersions) {
 	},function() {
 		return Haxelib_git(user3,lib9);
 	},function() {
-		return Haxelib_install(lib10);
+		return Haxelib_install(lib10,version);
 	},function() {
-		return Haxelib_install(lib11);
+		return Haxelib_install(lib11,version1);
 	}];
 	let libs1;
 	if(flixelVersions == "dev") {
