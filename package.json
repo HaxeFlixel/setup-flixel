@@ -1,12 +1,12 @@
 {
 	"devDependencies": {
-		"@actions/core": "^1.2.3",
-		"@zeit/ncc": "^0.21.1",
-		"dts2hx": "^0.6.0",
-		"lix": "^15.8.11"
+		"@actions/core": "^1.2.6",
+		"@zeit/ncc": "^0.22.3",
+		"dts2hx": "^0.15.3",
+		"lix": "^15.10.1"
 	},
 	"scripts": {
-		"postinstall": "lix download && dts2hx @actions/core",
+		"postinstall": "lix download && dts2hx @actions/core -o externs",
 		"build": "haxe --run Build"
 	}
 }
