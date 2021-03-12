@@ -30,9 +30,6 @@ function main() {
 		if (target == Hl && haxeVersion.startsWith("3")) {
 			return; // OpenFL's HL target and Haxe 3 don't work together
 		}
-		if (haxeVersion == Nightly) {
-			return; // Lime is not compatible with Haxe nightly builds right now
-		}
 	}
 
 	Core.startGroup("Installing Haxe Dependencies");
@@ -92,9 +89,9 @@ private function installHaxelibs(flixelVersions):ExitCode {
 		Haxelib.git.bind("larsiusprime", "firetongue"),
 		Haxelib.git.bind("bendmorris", "spinehaxe"),
 		Haxelib.git.bind("larsiusprime", "steamwrap"),
-
-		Haxelib.install.bind("openfl", "8.9.7"),
-		Haxelib.install.bind("lime", "7.8.0"),
+ 
+		Haxelib.git.bind("openfl", "openfl"),
+		Haxelib.install.bind("lime", "7.9.0"),
 	];
 	// @formatter:on
 	libs = libs.concat(if (flixelVersions == Dev) {
