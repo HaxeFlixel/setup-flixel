@@ -36,15 +36,15 @@ function make(target):Array<NamedExecution> {
 private function runUnitTests(target:Target):ExitCode {
 	runCallbackInDir("unit", Haxelib.run.bind(["munit", "gen"]));
 
-	if (target == Flash || target == Html5 || target == Hl) {
+	if (target == Cpp) {
+		Sys.println("Running unit tests...\n");
+		return OpenFL.run("test", "unit", target, "travis");
+	} else {
 		// can't run / display results without a browser,
 		// this at least checks if the tests compile
 		// also, neko fails randomly for some reason... (#2148)
 		Sys.println("Building unit tests...\n");
 		return OpenFL.build("unit", target);
-	} else {
-		Sys.println("Running unit tests...\n");
-		return OpenFL.run("test", "unit", target, "travis");
 	}
 }
 

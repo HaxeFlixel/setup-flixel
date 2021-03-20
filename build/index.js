@@ -903,14 +903,14 @@ function Tests_runUnitTests(target) {
 	Command_runCallbackInDir("unit",function() {
 		return Haxelib_run(args);
 	});
-	if(target == "flash" || target == "html5" || target == "hl") {
-		process.stdout.write("Building unit tests...\n");
-		process.stdout.write("\n");
-		return OpenFL_build("unit",target);
-	} else {
+	if(target == "cpp") {
 		process.stdout.write("Running unit tests...\n");
 		process.stdout.write("\n");
 		return OpenFL_run("test","unit",target,"travis");
+	} else {
+		process.stdout.write("Building unit tests...\n");
+		process.stdout.write("\n");
+		return OpenFL_build("unit",target);
 	}
 }
 function Tests_buildCoverageTests(target) {
