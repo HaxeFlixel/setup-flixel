@@ -756,10 +756,8 @@ function Main_installHaxelibs(flixelVersions) {
 	let lib8 = "spinehaxe";
 	let user3 = "larsiusprime";
 	let lib9 = "steamwrap";
-	let user4 = "openfl";
 	let lib10 = "openfl";
 	let lib11 = "lime";
-	let version = "7.9.0";
 	let libs = [function() {
 		return Haxelib_install(lib);
 	},function() {
@@ -781,9 +779,9 @@ function Main_installHaxelibs(flixelVersions) {
 	},function() {
 		return Haxelib_git(user3,lib9);
 	},function() {
-		return Haxelib_git(user4,lib10);
+		return Haxelib_install(lib10);
 	},function() {
-		return Haxelib_install(lib11,version);
+		return Haxelib_install(lib11);
 	}];
 	let libs1;
 	if(flixelVersions == "dev") {
