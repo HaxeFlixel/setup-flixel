@@ -13,8 +13,11 @@ function install(lib:String, ?version:String):ExitCode {
 	return Command.run("haxelib", args);
 }
 
-function git(user:String, lib:String, ?branch:String, ?path:String):ExitCode {
-	final args = ["git", lib, 'https://github.com/$user/$lib'];
+function git(user:String, haxelib:String, ?githubLib:String, ?branch:String, ?path:String):ExitCode {
+	if (githubLib == null) {
+		githubLib = haxelib;
+	}
+	final args = ["git", haxelib, 'https://github.com/$user/$githubLib'];
 	if (branch != null) {
 		args.push(branch);
 	}
