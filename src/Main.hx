@@ -80,7 +80,7 @@ private function installHaxelibs(flixelVersions):ExitCode {
 	// @formatter:off
 	var libs = [
 		Haxelib.install.bind("munit"), 
-		Haxelib.install.bind("hamcrest"), 
+		Haxelib.git.bind("Geokureli", "hamcrest-haxe"), 
 		Haxelib.install.bind("systools"),
 		Haxelib.install.bind("task"),
 		Haxelib.install.bind("poly2trihx"),
