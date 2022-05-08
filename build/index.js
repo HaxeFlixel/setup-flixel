@@ -821,6 +821,8 @@ function Main_installHaxelibs(flixelVersions) {
 	let user = "Geokureli";
 	let haxelib = "hamcrest";
 	let githubLib = "hamcrest-haxe";
+	let branch = null;
+	let path = "src";
 	let lib1 = "systools";
 	let lib2 = "task";
 	let lib3 = "poly2trihx";
@@ -838,7 +840,7 @@ function Main_installHaxelibs(flixelVersions) {
 	let libs = [function() {
 		return Haxelib_install(lib);
 	},function() {
-		return Haxelib_git(user,haxelib,githubLib);
+		return Haxelib_git(user,haxelib,githubLib,branch,path);
 	},function() {
 		return Haxelib_install(lib1);
 	},function() {
