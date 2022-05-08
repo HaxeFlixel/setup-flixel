@@ -821,7 +821,7 @@ function Main_installHaxelibs(flixelVersions) {
 	let user = "Geokureli";
 	let haxelib = "hamcrest";
 	let githubLib = "hamcrest-haxe";
-	let branch = null;
+	let branch = "master";
 	let path = "src";
 	let lib1 = "systools";
 	let lib2 = "task";
