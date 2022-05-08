@@ -548,8 +548,11 @@ function Haxelib_install(lib,version) {
 	args.push("--quiet");
 	return Command_run("haxelib",args);
 }
-function Haxelib_git(user,lib,branch,path) {
-	let args = ["git",lib,"https://github.com/" + user + "/" + lib];
+function Haxelib_git(user,haxelib,githubLib,branch,path) {
+	if(githubLib == null) {
+		githubLib = haxelib;
+	}
+	let args = ["git",haxelib,"https://github.com/" + user + "/" + githubLib];
 	if(branch != null) {
 		args.push(branch);
 	}
@@ -684,6 +687,79 @@ class haxe_io_Path {
 	}
 }
 haxe_io_Path.__name__ = true;
+class Std {
+	static string(s) {
+		return js_Boot.__string_rec(s,"");
+	}
+}
+Std.__name__ = true;
+class js_Boot {
+	static __string_rec(o,s) {
+		if(o == null) {
+			return "null";
+		}
+		if(s.length >= 5) {
+			return "<...>";
+		}
+		let t = typeof(o);
+		if(t == "function" && (o.__name__ || o.__ename__)) {
+			t = "object";
+		}
+		switch(t) {
+		case "function":
+			return "<function>";
+		case "object":
+			if(((o) instanceof Array)) {
+				let str = "[";
+				s += "\t";
+				let _g = 0;
+				let _g1 = o.length;
+				while(_g < _g1) {
+					let i = _g++;
+					str += (i > 0 ? "," : "") + js_Boot.__string_rec(o[i],s);
+				}
+				str += "]";
+				return str;
+			}
+			let tostr;
+			try {
+				tostr = o.toString;
+			} catch( _g ) {
+				return "???";
+			}
+			if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
+				let s2 = o.toString();
+				if(s2 != "[object Object]") {
+					return s2;
+				}
+			}
+			let str = "{\n";
+			s += "\t";
+			let hasp = o.hasOwnProperty != null;
+			let k = null;
+			for( k in o ) {
+			if(hasp && !o.hasOwnProperty(k)) {
+				continue;
+			}
+			if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+				continue;
+			}
+			if(str.length != 2) {
+				str += ", \n";
+			}
+			str += s + k + " : " + js_Boot.__string_rec(o[k],s);
+			}
+			s = s.substring(1);
+			str += "\n" + s + "}";
+			return str;
+		case "string":
+			return o;
+		default:
+			return String(o);
+		}
+	}
+}
+js_Boot.__name__ = true;
 function Main_main() {
 	let haxeVersion = actions_Core.getInput("haxe-version");
 	let flixelVersions = actions_Core.getInput("flixel-versions");
@@ -742,23 +818,27 @@ function Main_setupLix(haxeVersion) {
 }
 function Main_installHaxelibs(flixelVersions) {
 	let lib = "munit";
-	let lib1 = "hamcrest";
-	let lib2 = "systools";
-	let lib3 = "task";
-	let lib4 = "poly2trihx";
-	let lib5 = "nape-haxe4";
-	let user = "HaxeFoundation";
-	let lib6 = "hscript";
-	let user1 = "larsiusprime";
-	let lib7 = "firetongue";
-	let user2 = "bendmorris";
-	let lib8 = "spinehaxe";
-	let user3 = "larsiusprime";
-	let lib9 = "steamwrap";
-	let lib10 = "openfl";
-	let lib11 = "lime";
+	let user = "Geokureli";
+	let haxelib = "hamcrest";
+	let githubLib = "hamcrest-haxe";
+	let lib1 = "systools";
+	let lib2 = "task";
+	let lib3 = "poly2trihx";
+	let lib4 = "nape-haxe4";
+	let user1 = "HaxeFoundation";
+	let haxelib1 = "hscript";
+	let user2 = "larsiusprime";
+	let haxelib2 = "firetongue";
+	let user3 = "bendmorris";
+	let haxelib3 = "spinehaxe";
+	let user4 = "larsiusprime";
+	let haxelib4 = "steamwrap";
+	let lib5 = "openfl";
+	let lib6 = "lime";
 	let libs = [function() {
 		return Haxelib_install(lib);
+	},function() {
+		return Haxelib_git(user,haxelib,githubLib);
 	},function() {
 		return Haxelib_install(lib1);
 	},function() {
@@ -768,46 +848,44 @@ function Main_installHaxelibs(flixelVersions) {
 	},function() {
 		return Haxelib_install(lib4);
 	},function() {
+		return Haxelib_git(user1,haxelib1);
+	},function() {
+		return Haxelib_git(user2,haxelib2);
+	},function() {
+		return Haxelib_git(user3,haxelib3);
+	},function() {
+		return Haxelib_git(user4,haxelib4);
+	},function() {
 		return Haxelib_install(lib5);
 	},function() {
-		return Haxelib_git(user,lib6);
-	},function() {
-		return Haxelib_git(user1,lib7);
-	},function() {
-		return Haxelib_git(user2,lib8);
-	},function() {
-		return Haxelib_git(user3,lib9);
-	},function() {
-		return Haxelib_install(lib10);
-	},function() {
-		return Haxelib_install(lib11);
+		return Haxelib_install(lib6);
 	}];
 	let libs1;
 	if(flixelVersions == "dev") {
 		let user = "HaxeFlixel";
-		let lib = "flixel";
+		let haxelib = "flixel";
 		let user1 = "HaxeFlixel";
-		let lib1 = "flixel-tools";
+		let haxelib1 = "flixel-tools";
 		let user2 = "HaxeFlixel";
-		let lib2 = "flixel-templates";
+		let haxelib2 = "flixel-templates";
 		let user3 = "HaxeFlixel";
-		let lib3 = "flixel-demos";
+		let haxelib3 = "flixel-demos";
 		let user4 = "HaxeFlixel";
-		let lib4 = "flixel-addons";
+		let haxelib4 = "flixel-addons";
 		let user5 = "HaxeFlixel";
-		let lib5 = "flixel-ui";
+		let haxelib5 = "flixel-ui";
 		libs1 = [function() {
-			return Haxelib_git(user,lib);
+			return Haxelib_git(user,haxelib);
 		},function() {
-			return Haxelib_git(user1,lib1);
+			return Haxelib_git(user1,haxelib1);
 		},function() {
-			return Haxelib_git(user2,lib2);
+			return Haxelib_git(user2,haxelib2);
 		},function() {
-			return Haxelib_git(user3,lib3);
+			return Haxelib_git(user3,haxelib3);
 		},function() {
-			return Haxelib_git(user4,lib4);
+			return Haxelib_git(user4,haxelib4);
 		},function() {
-			return Haxelib_git(user5,lib5);
+			return Haxelib_git(user5,haxelib5);
 		}];
 	} else {
 		let lib = "flixel";
@@ -839,7 +917,7 @@ function Main_installHxcpp(target) {
 	}
 	let hxcppDir = haxe_io_Path.join([Main_HaxelibRepo,"hxcpp/git/"]);
 	let user = "HaxeFoundation";
-	let lib = "hxcpp";
+	let haxelib = "hxcpp";
 	let dir = hxcppDir + "/tools/run";
 	let cmd = "haxe";
 	let args = ["compile.hxml"];
@@ -847,7 +925,7 @@ function Main_installHxcpp(target) {
 	let cmd1 = "haxe";
 	let args1 = ["compile.hxml"];
 	return Command_runAll([function() {
-		return Haxelib_git(user,lib);
+		return Haxelib_git(user,haxelib);
 	},function() {
 		return Command_runInDir(dir,cmd,args);
 	},function() {
@@ -865,12 +943,6 @@ function OpenFL_run(operation,path,target,define) {
 	}
 	return Haxelib_run(args);
 }
-class Std {
-	static string(s) {
-		return js_Boot.__string_rec(s,"");
-	}
-}
-Std.__name__ = true;
 function Tests_make(target) {
 	let target1 = target;
 	let tmp = function() {
@@ -963,73 +1035,6 @@ class haxe_iterators_ArrayIterator {
 	}
 }
 haxe_iterators_ArrayIterator.__name__ = true;
-class js_Boot {
-	static __string_rec(o,s) {
-		if(o == null) {
-			return "null";
-		}
-		if(s.length >= 5) {
-			return "<...>";
-		}
-		let t = typeof(o);
-		if(t == "function" && (o.__name__ || o.__ename__)) {
-			t = "object";
-		}
-		switch(t) {
-		case "function":
-			return "<function>";
-		case "object":
-			if(((o) instanceof Array)) {
-				let str = "[";
-				s += "\t";
-				let _g = 0;
-				let _g1 = o.length;
-				while(_g < _g1) {
-					let i = _g++;
-					str += (i > 0 ? "," : "") + js_Boot.__string_rec(o[i],s);
-				}
-				str += "]";
-				return str;
-			}
-			let tostr;
-			try {
-				tostr = o.toString;
-			} catch( _g ) {
-				return "???";
-			}
-			if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
-				let s2 = o.toString();
-				if(s2 != "[object Object]") {
-					return s2;
-				}
-			}
-			let str = "{\n";
-			s += "\t";
-			let hasp = o.hasOwnProperty != null;
-			let k = null;
-			for( k in o ) {
-			if(hasp && !o.hasOwnProperty(k)) {
-				continue;
-			}
-			if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
-				continue;
-			}
-			if(str.length != 2) {
-				str += ", \n";
-			}
-			str += s + k + " : " + js_Boot.__string_rec(o[k],s);
-			}
-			s = s.substring(1);
-			str += "\n" + s + "}";
-			return str;
-		case "string":
-			return o;
-		default:
-			return String(o);
-		}
-	}
-}
-js_Boot.__name__ = true;
 var js_node_ChildProcess = __webpack_require__(129);
 var js_node_Fs = __webpack_require__(747);
 class sys_FileSystem {

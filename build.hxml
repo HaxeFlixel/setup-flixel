@@ -3,7 +3,7 @@
 -js build/haxe-output.js
 -dce full
 -lib hxnodejs
--cp externs/@actions/core
+-cp externs/actions-core
 -D analyzer-optimize
 -D js-es=6
 -cmd npm run build
