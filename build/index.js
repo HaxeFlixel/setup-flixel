@@ -947,36 +947,43 @@ function OpenFL_run(operation,path,target,define) {
 }
 function Tests_make(target) {
 	let target1 = target;
-	let tmp = function() {
-		return Tests_runUnitTests(target1);
-	};
 	let target2 = target;
-	let tmp1 = function() {
+	let tmp = function() {
 		return Tests_buildCoverageTests(target2);
 	};
 	let target3 = target;
-	let tmp2 = function() {
+	let tmp1 = function() {
 		return Tests_buildSwfVersionTests(target3);
 	};
 	let target4 = target;
-	let demos = target == "cpp" ? Tests_ImportantDemos : [];
-	let tmp3 = function() {
+	let demos = [];
+	let tmp2 = function() {
 		return Tests_buildDemos(target4,demos);
 	};
 	let target5 = target;
-	let tmp4 = function() {
+	let tmp3 = function() {
 		return Tests_buildSnippetsDemos(target5);
 	};
-	return [{ name : "Running Unit Tests", run : tmp, active : true},{ name : "Building Coverage Tests", run : tmp1, active : true},{ name : "Building SWF Version Tests", run : tmp2, active : target == "flash"},{ name : "Building flixel-demos", run : tmp3, active : true},{ name : "Building snippets.haxeflixel.com Demos", run : tmp4, active : target != "cpp"}];
+	return [{ name : "Running Unit Tests", run : function() {
+		return Tests_runUnitTests(target1);
+	}, active : true},{ name : "Building Coverage Tests", run : tmp, active : true},{ name : "Building SWF Version Tests", run : tmp1, active : target == "flash"},{ name : "Building flixel-demos", run : tmp2, active : true},{ name : "Building snippets.haxeflixel.com Demos", run : tmp3, active : target != "cpp"}];
 }
 function Tests_runUnitTests(target) {
 	let args = ["munit","gen"];
 	Command_runCallbackInDir("unit",function() {
 		return Haxelib_run(args);
 	});
-	process.stdout.write("Running unit tests...\n");
-	process.stdout.write("\n");
-	return OpenFL_run("test","unit",target,"travis");
+	if(target == "cpp") {
+		process.stdout.write("Running unit tests...\n");
+		process.stdout.write("\n");
+		return OpenFL_run("test","unit",target,"travis");
+	} else {
+		process.stdout.write(Std.string("Cannot run tests on " + target + ", building instead\n"));
+		process.stdout.write("\n");
+		process.stdout.write("Building unit tests...\n");
+		process.stdout.write("\n");
+		return OpenFL_build("unit",target);
+	}
 }
 function Tests_buildCoverageTests(target) {
 	process.stdout.write("\nBuilding coverage tests...\n");
@@ -1055,7 +1062,6 @@ if( String.fromCodePoint == null ) String.fromCodePoint = function(c) { return c
 js_Boot.__toStr = ({ }).toString;
 var Command_dryRun = false;
 var Main_HaxelibRepo = haxe_io_Path.join([process.env["HOME"],"haxe/haxelib"]);
-var Tests_ImportantDemos = ["Mode"];
 Main_main();
 })({});
 
