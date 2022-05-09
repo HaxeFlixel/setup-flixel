@@ -817,30 +817,36 @@ function Main_setupLix(haxeVersion) {
 	return Command_run("lix install haxe " + haxeVersion + " --global");
 }
 function Main_installHaxelibs(flixelVersions) {
-	let lib = "munit";
-	let user = "Geokureli";
-	let haxelib = "hamcrest";
-	let githubLib = "hamcrest-haxe";
+	let user = "massive-oss";
+	let haxelib = "munit";
+	let githubLib = "MassiveUnit";
 	let branch = "master";
 	let path = "src";
-	let lib1 = "systools";
-	let lib2 = "task";
-	let lib3 = "poly2trihx";
-	let lib4 = "nape-haxe4";
-	let user1 = "HaxeFoundation";
-	let haxelib1 = "hscript";
-	let user2 = "larsiusprime";
-	let haxelib2 = "firetongue";
-	let user3 = "bendmorris";
-	let haxelib3 = "spinehaxe";
-	let user4 = "larsiusprime";
-	let haxelib4 = "steamwrap";
-	let lib5 = "openfl";
-	let lib6 = "lime";
+	let user1 = "GeoKureli";
+	let haxelib1 = "hamcrest";
+	let githubLib1 = "hamcrest-haxe";
+	let branch1 = "master";
+	let path1 = "src";
+	let lib = "systools";
+	let lib1 = "task";
+	let lib2 = "poly2trihx";
+	let lib3 = "nape-haxe4";
+	let user2 = "HaxeFoundation";
+	let haxelib2 = "hscript";
+	let user3 = "larsiusprime";
+	let haxelib3 = "firetongue";
+	let user4 = "bendmorris";
+	let haxelib4 = "spinehaxe";
+	let user5 = "larsiusprime";
+	let haxelib5 = "steamwrap";
+	let lib4 = "openfl";
+	let lib5 = "lime";
 	let libs = [function() {
-		return Haxelib_install(lib);
-	},function() {
 		return Haxelib_git(user,haxelib,githubLib,branch,path);
+	},function() {
+		return Haxelib_git(user1,haxelib1,githubLib1,branch1,path1);
+	},function() {
+		return Haxelib_install(lib);
 	},function() {
 		return Haxelib_install(lib1);
 	},function() {
@@ -848,19 +854,17 @@ function Main_installHaxelibs(flixelVersions) {
 	},function() {
 		return Haxelib_install(lib3);
 	},function() {
-		return Haxelib_install(lib4);
-	},function() {
-		return Haxelib_git(user1,haxelib1);
-	},function() {
 		return Haxelib_git(user2,haxelib2);
 	},function() {
 		return Haxelib_git(user3,haxelib3);
 	},function() {
 		return Haxelib_git(user4,haxelib4);
 	},function() {
-		return Haxelib_install(lib5);
+		return Haxelib_git(user5,haxelib5);
 	},function() {
-		return Haxelib_install(lib6);
+		return Haxelib_install(lib4);
+	},function() {
+		return Haxelib_install(lib5);
 	}];
 	let libs1;
 	if(flixelVersions == "dev") {
@@ -947,26 +951,27 @@ function OpenFL_run(operation,path,target,define) {
 }
 function Tests_make(target) {
 	let target1 = target;
-	let target2 = target;
 	let tmp = function() {
+		return Tests_runUnitTests(target1);
+	};
+	let target2 = target;
+	let tmp1 = function() {
 		return Tests_buildCoverageTests(target2);
 	};
 	let target3 = target;
-	let tmp1 = function() {
+	let tmp2 = function() {
 		return Tests_buildSwfVersionTests(target3);
 	};
 	let target4 = target;
-	let demos = [];
-	let tmp2 = function() {
+	let demos = target == "cpp" ? Tests_CppDemos : null;
+	let tmp3 = function() {
 		return Tests_buildDemos(target4,demos);
 	};
 	let target5 = target;
-	let tmp3 = function() {
+	let tmp4 = function() {
 		return Tests_buildSnippetsDemos(target5);
 	};
-	return [{ name : "Running Unit Tests", run : function() {
-		return Tests_runUnitTests(target1);
-	}, active : true},{ name : "Building Coverage Tests", run : tmp, active : true},{ name : "Building SWF Version Tests", run : tmp1, active : target == "flash"},{ name : "Building flixel-demos", run : tmp2, active : true},{ name : "Building snippets.haxeflixel.com Demos", run : tmp3, active : target != "cpp"}];
+	return [{ name : "Running Unit Tests", run : tmp, active : true},{ name : "Building Coverage Tests", run : tmp1, active : true},{ name : "Building SWF Version Tests", run : tmp2, active : target == "flash"},{ name : "Building flixel-demos", run : tmp3, active : true},{ name : "Building snippets.haxeflixel.com Demos", run : tmp4, active : target != "cpp"}];
 }
 function Tests_runUnitTests(target) {
 	let args = ["munit","gen"];
@@ -1001,8 +1006,19 @@ function Tests_buildCoverageTests(target) {
 	}]);
 }
 function Tests_buildDemos(target,demos) {
-	process.stdout.write("\nBuilding demos...\n");
-	process.stdout.write("\n");
+	if(demos == null) {
+		process.stdout.write("\nBuilding all demos...\n");
+		process.stdout.write("\n");
+		demos = [];
+	} else if(demos == Tests_CppDemos) {
+		let v = "\nSkipping some demos due to cpp build times\nBuilding " + demos.length + " demo(s)...\n";
+		process.stdout.write(Std.string(v));
+		process.stdout.write("\n");
+	} else {
+		let v = "\nBuilding " + demos.length + " demo(s)...\n";
+		process.stdout.write(Std.string(v));
+		process.stdout.write("\n");
+	}
 	return Flixel_buildProjects(target,demos);
 }
 function Tests_buildSnippetsDemos(target) {
@@ -1062,6 +1078,7 @@ if( String.fromCodePoint == null ) String.fromCodePoint = function(c) { return c
 js_Boot.__toStr = ({ }).toString;
 var Command_dryRun = false;
 var Main_HaxelibRepo = haxe_io_Path.join([process.env["HOME"],"haxe/haxelib"]);
+var Tests_CppDemos = ["Mode","Flixius","MinimalistTD","TurnBasedRPG"];
 Main_main();
 })({});
 
