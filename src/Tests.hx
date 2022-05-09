@@ -2,7 +2,7 @@ import Command;
 import Main;
 import OpenFL.Target;
 
-private final ImportantDemos = ["Mode"];
+private final CppDemos = ["Mode", "Flixius", "MinimalistTD", "TurnBasedRPG"];
 
 function make(target):Array<NamedExecution> {
 	return [
@@ -23,7 +23,8 @@ function make(target):Array<NamedExecution> {
 		},
 		{
 			name: "Building flixel-demos",
-			run: buildDemos.bind(target, []),
+			// Cpp takes forever to build anything, so we cant test all the demos
+			run: buildDemos.bind(target, (target == Cpp ? CppDemos : null)),
 			active: true
 		},
 		{
@@ -60,8 +61,14 @@ private function buildCoverageTests(target:Target):ExitCode {
 	]);
 }
 
-private function buildDemos(target:Target, demos):ExitCode {
-	Sys.println("\nBuilding demos...\n");
+private function buildDemos(target:Target, ?demos):ExitCode {
+	if (demos == null) {
+		Sys.println('\nBuilding all demos...\n');
+		demos = [];
+	} else if (demos == CppDemos) {
+		Sys.println('\nSkipping some demos due to cpp build times\nBuilding ${demos.length} demo(s)...\n');
+	} else
+		Sys.println('\nBuilding ${demos.length} demo(s)...\n');
 	return Flixel.buildProjects(target, demos);
 }
 
