@@ -817,36 +817,30 @@ function Main_setupLix(haxeVersion) {
 	return Command_run("lix install haxe " + haxeVersion + " --global");
 }
 function Main_installHaxelibs(flixelVersions) {
-	let user = "massive-oss";
-	let haxelib = "munit";
-	let githubLib = "MassiveUnit";
+	let lib = "munit";
+	let user = "GeoKureli";
+	let haxelib = "hamcrest";
+	let githubLib = "hamcrest-haxe";
 	let branch = "master";
 	let path = "src";
-	let user1 = "GeoKureli";
-	let haxelib1 = "hamcrest";
-	let githubLib1 = "hamcrest-haxe";
-	let branch1 = "master";
-	let path1 = "src";
-	let lib = "systools";
-	let lib1 = "task";
-	let lib2 = "poly2trihx";
-	let lib3 = "nape-haxe4";
-	let user2 = "HaxeFoundation";
-	let haxelib2 = "hscript";
-	let user3 = "larsiusprime";
-	let haxelib3 = "firetongue";
-	let user4 = "bendmorris";
-	let haxelib4 = "spinehaxe";
-	let user5 = "larsiusprime";
-	let haxelib5 = "steamwrap";
-	let lib4 = "openfl";
-	let lib5 = "lime";
+	let lib1 = "systools";
+	let lib2 = "task";
+	let lib3 = "poly2trihx";
+	let lib4 = "nape-haxe4";
+	let user1 = "HaxeFoundation";
+	let haxelib1 = "hscript";
+	let user2 = "larsiusprime";
+	let haxelib2 = "firetongue";
+	let user3 = "bendmorris";
+	let haxelib3 = "spinehaxe";
+	let user4 = "larsiusprime";
+	let haxelib4 = "steamwrap";
+	let lib5 = "openfl";
+	let lib6 = "lime";
 	let libs = [function() {
-		return Haxelib_git(user,haxelib,githubLib,branch,path);
-	},function() {
-		return Haxelib_git(user1,haxelib1,githubLib1,branch1,path1);
-	},function() {
 		return Haxelib_install(lib);
+	},function() {
+		return Haxelib_git(user,haxelib,githubLib,branch,path);
 	},function() {
 		return Haxelib_install(lib1);
 	},function() {
@@ -854,17 +848,19 @@ function Main_installHaxelibs(flixelVersions) {
 	},function() {
 		return Haxelib_install(lib3);
 	},function() {
+		return Haxelib_install(lib4);
+	},function() {
+		return Haxelib_git(user1,haxelib1);
+	},function() {
 		return Haxelib_git(user2,haxelib2);
 	},function() {
 		return Haxelib_git(user3,haxelib3);
 	},function() {
 		return Haxelib_git(user4,haxelib4);
 	},function() {
-		return Haxelib_git(user5,haxelib5);
-	},function() {
-		return Haxelib_install(lib4);
-	},function() {
 		return Haxelib_install(lib5);
+	},function() {
+		return Haxelib_install(lib6);
 	}];
 	let libs1;
 	if(flixelVersions == "dev") {

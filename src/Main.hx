@@ -79,7 +79,9 @@ private function setupLix(haxeVersion):ExitCode {
 private function installHaxelibs(flixelVersions):ExitCode {
 	// @formatter:off
 	var libs = [
-		Haxelib.git.bind("massive-oss", "munit", "MassiveUnit", "master", "src"),
+		// TODO: fix git version failing on nightly
+		// Haxelib.git.bind("massive-oss", "munit", "MassiveUnit", "master", "src"),
+		Haxelib.install.bind("munit"),
 		Haxelib.git.bind("GeoKureli", "hamcrest", "hamcrest-haxe", "master", "src"), 
 		Haxelib.install.bind("systools"),
 		Haxelib.install.bind("task"),
