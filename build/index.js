@@ -798,7 +798,7 @@ function Main_main() {
 	actions_Core.endGroup();
 	if(runTests) {
 		actions_Core.startGroup("Test Preparation");
-		Command_cd(haxe_io_Path.join([Main_HaxelibRepo,"flixel/git/tests"]));
+		Command_cd("tests");
 		Command_putEnv("HXCPP_SILENT","1");
 		Command_putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
 		Command_putEnv("HXCPP_CACHE_MB","5000");

@@ -56,7 +56,7 @@ function main() {
 
 	if (runTests) {
 		Core.startGroup("Test Preparation");
-		cd(Path.join([HaxelibRepo, "flixel/git/tests"]));
+		cd("tests");
 		putEnv("HXCPP_SILENT", "1");
 		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 		putEnv("HXCPP_CACHE_MB", "5000");
