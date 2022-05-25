@@ -763,6 +763,7 @@ js_Boot.__name__ = true;
 function Main_main() {
 	let haxeVersion = actions_Core.getInput("haxe-version");
 	let flixelVersions = actions_Core.getInput("flixel-versions");
+	let testLocation = actions_Core.getInput("test-location");
 	let target = actions_Core.getInput("target");
 	let runTests = actions_Core.getInput("run-tests") == "true";
 	if(runTests) {
@@ -798,7 +799,11 @@ function Main_main() {
 	actions_Core.endGroup();
 	if(runTests) {
 		actions_Core.startGroup("Test Preparation");
-		Command_cd("tests");
+		if(testLocation == "local") {
+			Command_cd("tests");
+		} else {
+			Command_cd(haxe_io_Path.join([Main_HaxelibRepo,"flixel/git/tests"]));
+		}
 		Command_putEnv("HXCPP_SILENT","1");
 		Command_putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
 		Command_putEnv("HXCPP_CACHE_MB","5000");

@@ -12,6 +12,11 @@ enum abstract FlixelVersions(String) from String {
 	final Release = "release";
 }
 
+enum abstract TestLocation(String) from String {
+	final Local = "local";
+	final Git = "git";
+}
+
 enum abstract HaxeVersion(String) from String to String {
 	final Latest = "latest";
 	final Stable = "stable";
@@ -23,6 +28,7 @@ private final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 function main() {
 	final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
 	final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
+	final testLocation:TestLocation = Core.getInput("test-location");
 	final target:Target = Core.getInput("target");
 	final runTests:Bool = Core.getInput("run-tests") == "true";
 
@@ -56,7 +62,14 @@ function main() {
 
 	if (runTests) {
 		Core.startGroup("Test Preparation");
-		cd("tests");
+
+		if (testLocation == Local)
+			// When testing changes to flixel, flixel is set to the dev version
+			cd("tests");
+		else
+			// otherwise use git version
+			cd(Path.join([HaxelibRepo, "flixel/git/tests"]));
+
 		putEnv("HXCPP_SILENT", "1");
 		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 		putEnv("HXCPP_CACHE_MB", "5000");
