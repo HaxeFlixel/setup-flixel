@@ -10,6 +10,9 @@ inputs:
   flixel-versions: 
     description: 'Version of Flixel libs to use'
     required: true
+  test-location: 
+    description: 'The location of the unit tests'
+    required: false
   target:
     description: 'Which target to use'
     required: true
