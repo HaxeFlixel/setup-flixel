@@ -1,6 +1,6 @@
 {
 	"devDependencies": {
-		"@actions/core": "^1.2.6",
+		"@actions/core": "^1.9.1",
 		"@zeit/ncc": "^0.22.3",
 		"dts2hx": "^0.15.3",
 		"lix": "^15.10.1"
