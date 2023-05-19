@@ -73,10 +73,10 @@ private function buildDemos(target:Target, ?demos):ExitCode {
 }
 
 private function buildSnippetsDemos(target:Target):ExitCode {
-	Sys.println("\nBuilding mechanics demos...\n");
-	run("git", ["clone", "https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
+	Sys.println("\nBuilding spnippets demos...\n");
+	run("git", ["clone", "https://github.com/HaxeFlixel/snippets.haxeflixel.com"]);
 
-	return Flixel.buildProjects(target, ["-dir", "haxeflixel-mechanics"]);
+	return Flixel.buildProjects(target, ["-dir", "snippets.haxeflixel.com"]);
 }
 
 private function buildSwfVersionTests(target:Target):ExitCode {
