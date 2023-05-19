@@ -1023,10 +1023,10 @@ function Tests_buildDemos(target,demos) {
 	return Flixel_buildProjects(target,demos);
 }
 function Tests_buildSnippetsDemos(target) {
-	process.stdout.write("\nBuilding mechanics demos...\n");
+	process.stdout.write("\nBuilding snippets demos...\n");
 	process.stdout.write("\n");
-	Command_run("git",["clone","https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
-	return Flixel_buildProjects(target,["-dir","haxeflixel-mechanics"]);
+	Command_run("git",["clone","https://github.com/HaxeFlixel/snippets.haxeflixel.com"]);
+	return Flixel_buildProjects(target,["-dir","snippets.haxeflixel.com"]);
 }
 function Tests_buildSwfVersionTests(target) {
 	process.stdout.write("\nBuilding swf version tests...\n");
