@@ -100,6 +100,8 @@ private function installHaxelibs(flixelVersions):ExitCode {
 		Haxelib.install.bind("task"),
 		Haxelib.install.bind("poly2trihx"),
 		Haxelib.install.bind("nape-haxe4"),
+		Haxelib.install.bind("haxeui-core"),
+		Haxelib.install.bind("haxeui-flixel"),
 		Haxelib.git.bind("HaxeFoundation", "hscript"),
 		Haxelib.git.bind("larsiusprime", "firetongue"),
 		Haxelib.git.bind("bendmorris", "spinehaxe"),
