@@ -104,7 +104,7 @@ private function installHaxelibs(flixelVersions):ExitCode {
 		Haxelib.install.bind("haxeui-flixel"),
 		Haxelib.git.bind("HaxeFoundation", "hscript"),
 		Haxelib.git.bind("larsiusprime", "firetongue"),
-		Haxelib.git.bind("bendmorris", "spinehaxe"),
+		Haxelib.git.bind("Geokureli", "spinehaxe", "spinehaxe", "haxe4.3.1"),
 		Haxelib.git.bind("larsiusprime", "steamwrap"),
  
 		Haxelib.install.bind("openfl"),
