@@ -814,7 +814,7 @@ function Main_setupLix(haxeVersion) {
 }
 function Main_installHaxelibs(flixelVersions) {
 	let libs = [function() {
-		return Haxelib_install("munit");
+		return Haxelib_git("GeoKureli", "munit", "MassiveUnit", "haxe4-3");
 	},function() {
 		return Haxelib_git("GeoKureli", "hamcrest", "hamcrest-haxe", "master", "src");
 	},function() {
