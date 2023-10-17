@@ -834,7 +834,7 @@ function Main_installHaxelibs(flixelVersions) {
 	},function() {
 		return Haxelib_git("larsiusprime", "firetongue");
 	},function() {
-		return Haxelib_git("bendmorris", "spinehaxe");
+		return Haxelib_git("GeoKureli", "spinehaxe", "spinehaxe", "haxe4.3.1");
 	},function() {
 		return Haxelib_git("larsiusprime", "steamwrap");
 	},function() {
