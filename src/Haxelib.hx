@@ -10,6 +10,7 @@ function install(lib:String, ?version:String):ExitCode {
 		args.push(version);
 	}
 	args.push("--quiet");
+	args.push("--global");
 	return Command.run("haxelib", args);
 }
 
@@ -25,5 +26,6 @@ function git(user:String, haxelib:String, ?githubLib:String, ?branch:String, ?pa
 		args.push(path);
 	}
 	args.push("--quiet");
+	args.push("--global");
 	return Command.run("haxelib", args);
 }

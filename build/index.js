@@ -544,6 +544,7 @@ function Haxelib_install(lib,version) {
 		args.push(version);
 	}
 	args.push("--quiet");
+	args.push("--global");
 	return Command_run("haxelib",args);
 }
 function Haxelib_git(user,haxelib,githubLib,branch,path) {
@@ -558,6 +559,7 @@ function Haxelib_git(user,haxelib,githubLib,branch,path) {
 		args.push(path);
 	}
 	args.push("--quiet");
+	args.push("--global");
 	return Command_run("haxelib",args);
 }
 class HxOverrides {
