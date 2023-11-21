@@ -788,6 +788,7 @@ function Main_main() {
 	Command_run("neko -version");
 	Command_run("haxelib version");
 	Command_run("haxelib config");
+	Command_run("haxelib fixrepo");
 	Command_run("haxelib list");
 	actions_Core.endGroup();
 	if(runTests) {

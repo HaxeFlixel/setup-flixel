@@ -57,6 +57,7 @@ function main() {
 	run("neko -version");
 	run("haxelib version");
 	run("haxelib config");
+	run("haxelib fixrepo");
 	run("haxelib list");
 	Core.endGroup();
 
@@ -94,7 +95,7 @@ private function installHaxelibs(flixelVersions):ExitCode {
 	var libs = [
 		// TODO: fix git version failing on nightly
 		// Haxelib.git.bind("massive-oss", "munit", "MassiveUnit", "master", "src"),
-		Haxelib.install.bind("GeoKureli", "munit", "MassiveUnit", "haxe4-3", "src"),
+		Haxelib.git.bind("GeoKureli", "munit", "MassiveUnit", "haxe4-3", "src"),
 		Haxelib.git.bind("GeoKureli", "hamcrest", "hamcrest-haxe", "master", "src"), 
 		Haxelib.install.bind("systools"),
 		Haxelib.install.bind("task"),
