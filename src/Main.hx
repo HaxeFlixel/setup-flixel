@@ -21,6 +21,8 @@ enum abstract HaxeVersion(String) from String to String {
 	final Latest = "latest";
 	final Stable = "stable";
 	final Nightly = "nightly";
+	// use the version already installed (no lix)
+	final Current = "current";
 }
 
 private final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
@@ -52,7 +54,8 @@ function main() {
 	Core.endGroup();
 
 	Core.startGroup("Listing Dependencies");
-	run("lix -v");
+	if (haxeVersion != Current)
+		run("lix -v");
 	run("haxe -version");
 	run("neko -version");
 	run("haxelib version");
@@ -81,6 +84,9 @@ function main() {
 }
 
 private function setupLix(haxeVersion):ExitCode {
+	if (haxeVersion == Current)
+		return Success;
+
 	Sys.command("lix scope");
 	final path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
 	if (!FileSystem.exists(path)) {

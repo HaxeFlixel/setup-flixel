@@ -3144,7 +3144,9 @@ function Main_main() {
 	actions_Core.exportVariable("HAXELIB_REPO",Main_HaxelibRepo);
 	actions_Core.endGroup();
 	actions_Core.startGroup("Listing Dependencies");
-	Command_run("lix -v");
+	if(haxeVersion != "current") {
+		Command_run("lix -v");
+	}
 	Command_run("haxe -version");
 	Command_run("neko -version");
 	Command_run("haxelib version");
@@ -3168,6 +3170,9 @@ function Main_main() {
 	}
 }
 function Main_setupLix(haxeVersion) {
+	if(haxeVersion == "current") {
+		return 0;
+	}
 	js_node_ChildProcess.spawnSync("lix scope",{ shell : true, stdio : "inherit"});
 	let path = haxe_io_Path.join([process.env["HOME"],"haxe/.haxerc"]);
 	if(!sys_FileSystem.exists(path)) {
