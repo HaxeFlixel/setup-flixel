@@ -44,7 +44,7 @@ function main() {
 	final installationResult = runUntilFailure([
 		setupLix.bind(haxeVersion),
 		run.bind("sudo apt install neko"), // for nekotools
-		run.bind("haxelib install haxelib 4.0.3"), // 4.1.0 is failing on unit tests
+		// run.bind("haxelib install haxelib 4.0.3"), // 4.1.0 is failing on unit tests
 		installHaxelibs.bind(flixelVersions),
 		installHxcpp.bind(target)
 	]);
