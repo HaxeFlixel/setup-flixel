@@ -3128,12 +3128,15 @@ function Main_main() {
 	actions_Core.startGroup("Installing Haxe Dependencies");
 	let haxeVersion1 = haxeVersion;
 	let cmd = "sudo apt install neko";
+	let cmd1 = "haxelib install haxelib 4.0.3";
 	let flixelVersions1 = flixelVersions;
 	let target1 = target;
 	if(Command_runUntilFailure([function() {
 		return Main_setupLix(haxeVersion1);
 	},function() {
 		return Command_run(cmd);
+	},function() {
+		return Command_run(cmd1);
 	},function() {
 		return Main_installHaxelibs(flixelVersions1);
 	},function() {
