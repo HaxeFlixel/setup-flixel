@@ -12,6 +12,11 @@ enum abstract FlixelVersions(String) from String {
 	final Release = "release";
 }
 
+enum abstract OpenFlVersion(String) from String {
+	final Dev = "dev";
+	final Release = "release";
+}
+
 enum abstract TestLocation(String) from String {
 	final Local = "local";
 	final Git = "git";
@@ -29,6 +34,7 @@ private final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 
 function main() {
 	final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
+	final openFlVersion:OpenFlVersion = Core.getInput("openfl-version");
 	final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
 	final testLocation:TestLocation = Core.getInput("test-location");
 	final target:Target = Core.getInput("target");
@@ -45,7 +51,7 @@ function main() {
 		setupLix.bind(haxeVersion),
 		run.bind("sudo apt install neko"), // for nekotools
 		// run.bind("haxelib install haxelib 4.0.3"), // 4.1.0 is failing on unit tests
-		installHaxelibs.bind(flixelVersions),
+		installHaxelibs.bind(openFlVersion, flixelVersions),
 		installHxcpp.bind(target)
 	]);
 	if (installationResult != Success) {
@@ -97,7 +103,7 @@ private function setupLix(haxeVersion):ExitCode {
 	return run('lix install haxe $haxeVersion --global');
 }
 
-private function installHaxelibs(flixelVersions):ExitCode {
+private function installHaxelibs(openFlVersion:OpenFlVersion, flixelVersions:FlixelVersions):ExitCode {
 	// @formatter:off
 	var libs = [
 		// TODO: fix git version failing on nightly
@@ -114,8 +120,11 @@ private function installHaxelibs(flixelVersions):ExitCode {
 		Haxelib.git.bind("larsiusprime", "firetongue"),
 		Haxelib.git.bind("Geokureli", "spinehaxe", "spinehaxe", "haxe4.3.1"),
 		Haxelib.git.bind("larsiusprime", "steamwrap"),
- 
-		Haxelib.install.bind("openfl"),
+		
+		(openFlVersion == Dev
+			? Haxelib.git.bind("openfl", "openfl")
+			: Haxelib.install.bind("openfl")
+		),
 		Haxelib.install.bind("lime"),
 	];
 	// @formatter:on

@@ -5,8 +5,11 @@ branding:
   color: 'blue'
 inputs:
   haxe-version:
-    description: 'Version of Haxe to use'
-    required: true
+    description: 'Version of Haxe to install via lix'
+    required: false
+  openfl-version:
+    description: 'Version of Openfl to use'
+    required: false
   flixel-versions: 
     description: 'Version of Flixel libs to use'
     required: true
