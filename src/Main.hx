@@ -114,6 +114,7 @@ private function installHaxelibs(limeVersion:LibVersion, openflVersion:LibVersio
 		Haxelib.install.bind("nape-haxe4"),
 		Haxelib.install.bind("haxeui-core"),
 		Haxelib.install.bind("haxeui-flixel"),
+		Haxelib.install.bind("format"), // needed for git lime
 		Haxelib.git.bind("HaxeFoundation", "hscript"),
 		Haxelib.git.bind("larsiusprime", "firetongue"),
 		Haxelib.git.bind("Geokureli", "spinehaxe", "spinehaxe", "haxe4.3.1"),
