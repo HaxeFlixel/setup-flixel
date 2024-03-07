@@ -7,8 +7,8 @@ inputs:
   haxe-version:
     description: 'Version of Haxe to install via lix'
     required: false
-  openfl-version:
-    description: 'Version of Openfl to use'
+  lime-version:
+    description: 'Version of Lime to use'
     required: false
   flixel-versions: 
     description: 'Version of Flixel libs to use'

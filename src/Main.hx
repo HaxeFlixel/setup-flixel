@@ -12,7 +12,7 @@ enum abstract FlixelVersions(String) from String {
 	final Release = "release";
 }
 
-enum abstract OpenFlVersion(String) from String {
+enum abstract LimeVersion(String) from String {
 	final Dev = "dev";
 	final Release = "release";
 }
@@ -34,7 +34,7 @@ private final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 
 function main() {
 	final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
-	final openFlVersion:OpenFlVersion = Core.getInput("openfl-version");
+	final limeVersion:LimeVersion = Core.getInput("lime-version");
 	final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
 	final testLocation:TestLocation = Core.getInput("test-location");
 	final target:Target = Core.getInput("target");
@@ -106,7 +106,7 @@ private function setupLix(haxeVersion):ExitCode {
 	return run('lix install haxe $haxeVersion --global');
 }
 
-private function installHaxelibs(openFlVersion:OpenFlVersion, flixelVersions:FlixelVersions):ExitCode {
+private function installHaxelibs(limeVersion:LimeVersion, flixelVersions:FlixelVersions):ExitCode {
 	// @formatter:off
 	var libs = [
 		// TODO: fix git version failing on nightly
@@ -124,11 +124,11 @@ private function installHaxelibs(openFlVersion:OpenFlVersion, flixelVersions:Fli
 		Haxelib.git.bind("Geokureli", "spinehaxe", "spinehaxe", "haxe4.3.1"),
 		Haxelib.git.bind("larsiusprime", "steamwrap"),
 		
-		(openFlVersion == Dev
-			? Haxelib.git.bind("openfl", "openfl")
-			: Haxelib.install.bind("openfl")
+		(limeVersion == Dev
+			? Haxelib.git.bind("openfl", "lime")
+			: Haxelib.install.bind("lime")
 		),
-		Haxelib.install.bind("lime"),
+		Haxelib.install.bind("openfl"),
 	];
 	// @formatter:on
 	libs = libs.concat(if (flixelVersions == Dev) {
