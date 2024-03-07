@@ -2892,6 +2892,16 @@ function Flixel_buildProjects(target,args) {
 function Haxelib_run(args) {
 	return Command_run("haxelib",["run"].concat(args));
 }
+function Haxelib_fromVersion(defaultUser,lib,version) {
+	switch(version) {
+	case "dev":
+		return Haxelib_git(defaultUser,lib);
+	case "release":
+		return Haxelib_install(lib);
+	default:
+		return Haxelib_install(lib,version);
+	}
+}
 function Haxelib_install(lib,version) {
 	let args = ["install",lib];
 	if(version != null) {
@@ -3116,7 +3126,8 @@ class js_Boot {
 js_Boot.__name__ = true;
 function Main_main() {
 	let haxeVersion = actions_Core.getInput("haxe-version");
-	let openFlVersion = actions_Core.getInput("openfl-version");
+	let limeVersion = actions_Core.getInput("lime-version");
+	let openflVersion = actions_Core.getInput("openfl-version");
 	let flixelVersions = actions_Core.getInput("flixel-versions");
 	let testLocation = actions_Core.getInput("test-location");
 	let target = actions_Core.getInput("target");
@@ -3132,7 +3143,8 @@ function Main_main() {
 	let cmd1 = "sudo apt-get install --fix-missing";
 	let cmd2 = "sudo apt-get upgrade";
 	let cmd3 = "sudo apt-get install neko -y";
-	let openFlVersion1 = openFlVersion;
+	let limeVersion1 = limeVersion;
+	let openflVersion1 = openflVersion;
 	let flixelVersions1 = flixelVersions;
 	let target1 = target;
 	if(Command_runUntilFailure([function() {
@@ -3146,7 +3158,7 @@ function Main_main() {
 	},function() {
 		return Command_run(cmd3);
 	},function() {
-		return Main_installHaxelibs(openFlVersion1,flixelVersions1);
+		return Main_installHaxelibs(limeVersion1,openflVersion1,flixelVersions1);
 	},function() {
 		return Main_installHxcpp(target1);
 	}]) != 0) {
@@ -3192,136 +3204,98 @@ function Main_setupLix(haxeVersion) {
 	js_node_Fs.writeFileSync(path,"{\"version\": \"stable\", \"resolveLibs\": \"haxelib\"}");
 	return Command_run("lix install haxe " + haxeVersion + " --global");
 }
-function Main_installHaxelibs(openFlVersion,flixelVersions) {
+function Main_installHaxelibs(limeVersion,openflVersion,flixelVersions) {
 	let user = "GeoKureli";
 	let haxelib = "munit";
 	let githubLib = "MassiveUnit";
 	let branch = "haxe4-3";
 	let path = "src";
-	let libs = function() {
-		return Haxelib_git(user,haxelib,githubLib,branch,path);
-	};
 	let user1 = "GeoKureli";
 	let haxelib1 = "hamcrest";
 	let githubLib1 = "hamcrest-haxe";
 	let branch1 = "master";
 	let path1 = "src";
-	let libs1 = function() {
-		return Haxelib_git(user1,haxelib1,githubLib1,branch1,path1);
-	};
 	let lib = "systools";
-	let libs2 = function() {
-		return Haxelib_install(lib);
-	};
 	let lib1 = "task";
-	let libs3 = function() {
-		return Haxelib_install(lib1);
-	};
 	let lib2 = "poly2trihx";
-	let libs4 = function() {
-		return Haxelib_install(lib2);
-	};
 	let lib3 = "nape-haxe4";
-	let libs5 = function() {
-		return Haxelib_install(lib3);
-	};
 	let lib4 = "haxeui-core";
-	let libs6 = function() {
-		return Haxelib_install(lib4);
-	};
 	let lib5 = "haxeui-flixel";
-	let libs7 = function() {
-		return Haxelib_install(lib5);
-	};
 	let user2 = "HaxeFoundation";
 	let haxelib2 = "hscript";
-	let libs8 = function() {
-		return Haxelib_git(user2,haxelib2);
-	};
 	let user3 = "larsiusprime";
 	let haxelib3 = "firetongue";
-	let libs9 = function() {
-		return Haxelib_git(user3,haxelib3);
-	};
 	let user4 = "Geokureli";
 	let haxelib4 = "spinehaxe";
 	let githubLib2 = "spinehaxe";
 	let branch2 = "haxe4.3.1";
-	let libs10 = function() {
-		return Haxelib_git(user4,haxelib4,githubLib2,branch2);
-	};
 	let user5 = "larsiusprime";
 	let haxelib5 = "steamwrap";
-	let libs11 = function() {
-		return Haxelib_git(user5,haxelib5);
-	};
-	let libs12;
-	if(openFlVersion == "dev") {
-		let user = "openfl";
-		let haxelib = "openfl";
-		libs12 = function() {
-			return Haxelib_git(user,haxelib);
-		};
-	} else {
-		let lib = "openfl";
-		libs12 = function() {
-			return Haxelib_install(lib);
-		};
-	}
+	let defaultUser = "openfl";
 	let lib6 = "lime";
-	let libs13 = [libs,libs1,libs2,libs3,libs4,libs5,libs6,libs7,libs8,libs9,libs10,libs11,libs12,function() {
-		return Haxelib_install(lib6);
-	}];
-	let libs14;
-	if(flixelVersions == "dev") {
-		let user = "HaxeFlixel";
-		let haxelib = "flixel";
-		let user1 = "HaxeFlixel";
-		let haxelib1 = "flixel-tools";
-		let user2 = "HaxeFlixel";
-		let haxelib2 = "flixel-templates";
-		let user3 = "HaxeFlixel";
-		let haxelib3 = "flixel-demos";
-		let user4 = "HaxeFlixel";
-		let haxelib4 = "flixel-addons";
-		let user5 = "HaxeFlixel";
-		let haxelib5 = "flixel-ui";
-		libs14 = [function() {
-			return Haxelib_git(user,haxelib);
-		},function() {
-			return Haxelib_git(user1,haxelib1);
-		},function() {
-			return Haxelib_git(user2,haxelib2);
-		},function() {
-			return Haxelib_git(user3,haxelib3);
-		},function() {
-			return Haxelib_git(user4,haxelib4);
-		},function() {
-			return Haxelib_git(user5,haxelib5);
-		}];
-	} else {
-		let lib = "flixel";
-		let lib1 = "flixel-tools";
-		let lib2 = "flixel-templates";
-		let lib3 = "flixel-demos";
-		let lib4 = "flixel-addons";
-		let lib5 = "flixel-ui";
-		libs14 = [function() {
-			return Haxelib_install(lib);
-		},function() {
-			return Haxelib_install(lib1);
-		},function() {
-			return Haxelib_install(lib2);
-		},function() {
-			return Haxelib_install(lib3);
-		},function() {
-			return Haxelib_install(lib4);
-		},function() {
-			return Haxelib_install(lib5);
-		}];
-	}
-	libs13 = libs13.concat(libs14);
-	return Command_runUntilFailure(libs13);
+	let version = limeVersion;
+	let defaultUser1 = "openfl";
+	let lib7 = "openfl";
+	let version1 = openflVersion;
+	let defaultUser2 = "HaxeFlixel";
+	let lib8 = "flixel";
+	let version2 = flixelVersions;
+	let defaultUser3 = "HaxeFlixel";
+	let lib9 = "flixel-tools";
+	let version3 = flixelVersions;
+	let defaultUser4 = "HaxeFlixel";
+	let lib10 = "flixel-templates";
+	let version4 = flixelVersions;
+	let defaultUser5 = "HaxeFlixel";
+	let lib11 = "flixel-demos";
+	let version5 = flixelVersions;
+	let defaultUser6 = "HaxeFlixel";
+	let lib12 = "flixel-addons";
+	let version6 = flixelVersions;
+	let defaultUser7 = "HaxeFlixel";
+	let lib13 = "flixel-ui";
+	let version7 = flixelVersions;
+	return Command_runUntilFailure([function() {
+		return Haxelib_git(user,haxelib,githubLib,branch,path);
+	},function() {
+		return Haxelib_git(user1,haxelib1,githubLib1,branch1,path1);
+	},function() {
+		return Haxelib_install(lib);
+	},function() {
+		return Haxelib_install(lib1);
+	},function() {
+		return Haxelib_install(lib2);
+	},function() {
+		return Haxelib_install(lib3);
+	},function() {
+		return Haxelib_install(lib4);
+	},function() {
+		return Haxelib_install(lib5);
+	},function() {
+		return Haxelib_git(user2,haxelib2);
+	},function() {
+		return Haxelib_git(user3,haxelib3);
+	},function() {
+		return Haxelib_git(user4,haxelib4,githubLib2,branch2);
+	},function() {
+		return Haxelib_git(user5,haxelib5);
+	},function() {
+		return Haxelib_fromVersion(defaultUser,lib6,version);
+	},function() {
+		return Haxelib_fromVersion(defaultUser1,lib7,version1);
+	},function() {
+		return Haxelib_fromVersion(defaultUser2,lib8,version2);
+	},function() {
+		return Haxelib_fromVersion(defaultUser3,lib9,version3);
+	},function() {
+		return Haxelib_fromVersion(defaultUser4,lib10,version4);
+	},function() {
+		return Haxelib_fromVersion(defaultUser5,lib11,version5);
+	},function() {
+		return Haxelib_fromVersion(defaultUser6,lib12,version6);
+	},function() {
+		return Haxelib_fromVersion(defaultUser7,lib13,version7);
+	}]);
 }
 function Main_installHxcpp(target) {
 	if(target != "cpp") {

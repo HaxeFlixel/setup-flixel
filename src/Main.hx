@@ -7,12 +7,7 @@ import sys.io.File;
 
 using StringTools;
 
-enum abstract FlixelVersions(String) from String {
-	final Dev = "dev";
-	final Release = "release";
-}
-
-enum abstract LimeVersion(String) from String {
+enum abstract LibVersion(String) from String {
 	final Dev = "dev";
 	final Release = "release";
 }
@@ -34,8 +29,9 @@ private final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 
 function main() {
 	final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
-	final limeVersion:LimeVersion = Core.getInput("lime-version");
-	final flixelVersions:FlixelVersions = Core.getInput("flixel-versions");
+	final limeVersion:LibVersion = Core.getInput("lime-version");
+	final openflVersion:LibVersion = Core.getInput("openfl-version");
+	final flixelVersions:LibVersion = Core.getInput("flixel-versions");
 	final testLocation:TestLocation = Core.getInput("test-location");
 	final target:Target = Core.getInput("target");
 	final runTests:Bool = Core.getInput("run-tests") == "true";
@@ -54,7 +50,7 @@ function main() {
 		run.bind("sudo apt-get upgrade"), // for nekotools
 		run.bind("sudo apt-get install neko -y"), // for nekotools
 		// run.bind("haxelib install haxelib 4.0.3"), // 4.1.0 is failing on unit tests
-		installHaxelibs.bind(openFlVersion, flixelVersions),
+		installHaxelibs.bind(limeVersion, openflVersion, flixelVersions),
 		installHxcpp.bind(target)
 	]);
 	if (installationResult != Success) {
@@ -106,13 +102,12 @@ private function setupLix(haxeVersion):ExitCode {
 	return run('lix install haxe $haxeVersion --global');
 }
 
-private function installHaxelibs(limeVersion:LimeVersion, flixelVersions:FlixelVersions):ExitCode {
-	// @formatter:off
-	var libs = [
+private function installHaxelibs(limeVersion:LibVersion, openflVersion:LibVersion, flixelVersions:LibVersion):ExitCode {
+	final libs = [
 		// TODO: fix git version failing on nightly
 		// Haxelib.git.bind("massive-oss", "munit", "MassiveUnit", "master", "src"),
 		Haxelib.git.bind("GeoKureli", "munit", "MassiveUnit", "haxe4-3", "src"),
-		Haxelib.git.bind("GeoKureli", "hamcrest", "hamcrest-haxe", "master", "src"), 
+		Haxelib.git.bind("GeoKureli", "hamcrest", "hamcrest-haxe", "master", "src"),
 		Haxelib.install.bind("systools"),
 		Haxelib.install.bind("task"),
 		Haxelib.install.bind("poly2trihx"),
@@ -123,33 +118,17 @@ private function installHaxelibs(limeVersion:LimeVersion, flixelVersions:FlixelV
 		Haxelib.git.bind("larsiusprime", "firetongue"),
 		Haxelib.git.bind("Geokureli", "spinehaxe", "spinehaxe", "haxe4.3.1"),
 		Haxelib.git.bind("larsiusprime", "steamwrap"),
-		
-		(limeVersion == Dev
-			? Haxelib.git.bind("openfl", "lime")
-			: Haxelib.install.bind("lime")
-		),
-		Haxelib.install.bind("openfl"),
+
+		Haxelib.fromVersion.bind("openfl", "lime", limeVersion),
+		Haxelib.fromVersion.bind("openfl", "openfl", openflVersion),
+
+		Haxelib.fromVersion.bind("HaxeFlixel", "flixel", flixelVersions),
+		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-tools", flixelVersions),
+		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-templates", flixelVersions),
+		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-demos", flixelVersions),
+		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-addons", flixelVersions),
+		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-ui", flixelVersions),
 	];
-	// @formatter:on
-	libs = libs.concat(if (flixelVersions == Dev) {
-		[
-			Haxelib.git.bind("HaxeFlixel", "flixel"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-tools"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-templates"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-demos"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-addons"),
-			Haxelib.git.bind("HaxeFlixel", "flixel-ui"),
-		];
-	} else {
-		[
-			Haxelib.install.bind("flixel"),
-			Haxelib.install.bind("flixel-tools"),
-			Haxelib.install.bind("flixel-templates"),
-			Haxelib.install.bind("flixel-demos"),
-			Haxelib.install.bind("flixel-addons"),
-			Haxelib.install.bind("flixel-ui")
-		];
-	});
 	return runUntilFailure(libs);
 }
 

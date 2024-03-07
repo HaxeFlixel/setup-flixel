@@ -10,6 +10,9 @@ inputs:
   lime-version:
     description: 'Version of Lime to use'
     required: false
+  openfl-version:
+    description: 'Version of Openfl to use'
+    required: false
   flixel-versions: 
     description: 'Version of Flixel libs to use'
     required: true

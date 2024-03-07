@@ -1,7 +1,19 @@
 import Command.ExitCode;
+import Main.LibVersion;
 
 function run(args:Array<String>):ExitCode {
 	return Command.run("haxelib", ["run"].concat(args));
+}
+
+function fromVersion(defaultUser:String, lib:String, version:LibVersion):ExitCode {
+	return switch (version) {
+		case Dev:
+			Haxelib.git(defaultUser, lib);
+		case Release:
+			Haxelib.install(lib);
+		case version:
+			Haxelib.install(lib, cast version);
+	}
 }
 
 function install(lib:String, ?version:String):ExitCode {
