@@ -9,7 +9,7 @@ function fromVersion(defaultUser:String, lib:String, version:LibVersion):ExitCod
 	return switch (version) {
 		case Dev:
 			Haxelib.git(defaultUser, lib);
-		case Release:
+		case Release | "" | null:
 			Haxelib.install(lib);
 		case version:
 			Haxelib.install(lib, cast version);
