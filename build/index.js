@@ -2893,13 +2893,17 @@ function Haxelib_run(args) {
 	return Command_run("haxelib",["run"].concat(args));
 }
 function Haxelib_fromVersion(defaultUser,lib,version) {
-	switch(version) {
-	case "dev":
-		return Haxelib_git(defaultUser,lib);
-	case "release":
+	if(version == null) {
 		return Haxelib_install(lib);
-	default:
-		return Haxelib_install(lib,version);
+	} else {
+		switch(version) {
+		case "":case "release":
+			return Haxelib_install(lib);
+		case "dev":
+			return Haxelib_git(defaultUser,lib);
+		default:
+			return Haxelib_install(lib,version);
+		}
 	}
 }
 function Haxelib_install(lib,version) {
