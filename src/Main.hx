@@ -7,17 +7,20 @@ import sys.io.File;
 
 using StringTools;
 
-enum abstract LibVersion(String) from String {
+enum abstract LibVersion(String) from String
+{
 	final Dev = "dev";
 	final Release = "release";
 }
 
-enum abstract TestLocation(String) from String {
+enum abstract TestLocation(String) from String
+{
 	final Local = "local";
 	final Git = "git";
 }
 
-enum abstract HaxeVersion(String) from String to String {
+enum abstract HaxeVersion(String) from String to String
+{
 	final Latest = "latest";
 	final Stable = "stable";
 	final Nightly = "nightly";
@@ -27,7 +30,8 @@ enum abstract HaxeVersion(String) from String to String {
 
 private final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 
-function main() {
+function main()
+{
 	final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
 	final limeVersion:LibVersion = Core.getInput("lime-version");
 	final openflVersion:LibVersion = Core.getInput("openfl-version");
@@ -35,13 +39,15 @@ function main() {
 	final testLocation:TestLocation = Core.getInput("test-location");
 	final target:Target = Core.getInput("target");
 	final runTests:Bool = Core.getInput("run-tests") == "true";
-
-	if (runTests) {
-		if (target == Hl && haxeVersion.startsWith("3")) {
+	
+	if (runTests)
+	{
+		if (target == Hl && haxeVersion.startsWith("3"))
+		{
 			return; // OpenFL's HL target and Haxe 3 don't work together
 		}
 	}
-
+	
 	Core.startGroup("Installing Haxe Dependencies");
 	final installationResult = runUntilFailure([
 		setupLix.bind(haxeVersion),
@@ -53,12 +59,13 @@ function main() {
 		installHaxelibs.bind(limeVersion, openflVersion, flixelVersions),
 		installHxcpp.bind(target)
 	]);
-	if (installationResult != Success) {
+	if (installationResult != Success)
+	{
 		Sys.exit(Failure);
 	}
 	Core.exportVariable("HAXELIB_REPO", HaxelibRepo);
 	Core.endGroup();
-
+	
 	Core.startGroup("Listing Dependencies");
 	if (haxeVersion != Current)
 		run("lix -v");
@@ -69,40 +76,44 @@ function main() {
 	run("haxelib fixrepo");
 	run("haxelib list");
 	Core.endGroup();
-
-	if (runTests) {
+	
+	if (runTests)
+	{
 		Core.startGroup("Test Preparation");
-
+		
 		if (testLocation == Local)
 			// When testing changes to flixel, flixel is set to the dev version
 			cd("tests");
 		else
 			// otherwise use git version
 			cd(Path.join([HaxelibRepo, "flixel/git/tests"]));
-
+			
 		putEnv("HXCPP_SILENT", "1");
 		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 		putEnv("HXCPP_CACHE_MB", "5000");
 		Core.endGroup();
-
+		
 		Sys.exit(runAllNamed(Tests.make(target)));
 	}
 }
 
-private function setupLix(haxeVersion):ExitCode {
+private function setupLix(haxeVersion):ExitCode
+{
 	if (haxeVersion == Current)
 		return Success;
-
+		
 	Sys.command("lix scope");
 	final path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
-	if (!FileSystem.exists(path)) {
+	if (!FileSystem.exists(path))
+	{
 		return Failure;
 	}
 	File.saveContent(path, '{"version": "stable", "resolveLibs": "haxelib"}');
 	return run('lix install haxe $haxeVersion --global');
 }
 
-private function installHaxelibs(limeVersion:LibVersion, openflVersion:LibVersion, flixelVersions:LibVersion):ExitCode {
+private function installHaxelibs(limeVersion:LibVersion, openflVersion:LibVersion, flixelVersions:LibVersion):ExitCode
+{
 	final libs = [
 		// TODO: fix git version failing on nightly
 		// Haxelib.git.bind("massive-oss", "munit", "MassiveUnit", "master", "src"),
@@ -114,27 +125,36 @@ private function installHaxelibs(limeVersion:LibVersion, openflVersion:LibVersio
 		Haxelib.install.bind("nape-haxe4"),
 		Haxelib.install.bind("haxeui-core"),
 		Haxelib.install.bind("haxeui-flixel"),
-		Haxelib.install.bind("format"), // needed for git lime
+		
 		Haxelib.git.bind("HaxeFoundation", "hscript"),
 		Haxelib.git.bind("larsiusprime", "firetongue"),
 		Haxelib.git.bind("Geokureli", "spinehaxe", "spinehaxe", "haxe4.3.1"),
 		Haxelib.git.bind("larsiusprime", "steamwrap"),
-
+		
 		Haxelib.fromVersion.bind("openfl", "lime", limeVersion),
 		Haxelib.fromVersion.bind("openfl", "openfl", openflVersion),
-
+		
 		Haxelib.fromVersion.bind("HaxeFlixel", "flixel", flixelVersions),
 		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-tools", flixelVersions),
 		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-templates", flixelVersions),
 		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-demos", flixelVersions),
 		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-addons", flixelVersions),
-		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-ui", flixelVersions),
+		Haxelib.fromVersion.bind("HaxeFlixel", "flixel-ui", flixelVersions)
 	];
+	
+	if (limeVersion == Dev)
+	{
+		// needed for git lime
+		libs.push(Haxelib.install.bind("format"));
+		libs.push(Haxelib.install.bind("hxp"));
+	}
 	return runUntilFailure(libs);
 }
 
-private function installHxcpp(target:Target):ExitCode {
-	if (target != Cpp) {
+private function installHxcpp(target:Target):ExitCode
+{
+	if (target != Cpp)
+	{
 		return Success;
 	}
 	final hxcppDir = Path.join([HaxelibRepo, "hxcpp/git/"]);
