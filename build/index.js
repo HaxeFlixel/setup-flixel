@@ -2887,7 +2887,7 @@ function Command_putEnv(s,v) {
 	}
 }
 function Flixel_buildProjects(target,args) {
-	return Haxelib_run(["flixel-tools","bp",target].concat(args).concat(["-Dno-deprecation-warnings"]));
+	return Haxelib_run(["flixel-tools","bp",target].concat(args));
 }
 function Haxelib_run(args) {
 	return Command_run("haxelib",["run"].concat(args));
