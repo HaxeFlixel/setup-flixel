@@ -41,7 +41,7 @@ private function runUnitTests(target:Target):ExitCode {
 	// can't run / display results without a browser,
 	// this at least checks if the tests compile
 	// also, neko fails randomly for some reason... (#2148)
-	var runTests = target == Cpp;
+	var runTests = target == Cpp || target == Hl;
 
 	if (runTests) {
 		Sys.println("Running unit tests...\n");
