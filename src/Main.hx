@@ -19,20 +19,10 @@ enum abstract TestLocation(String) from String
 	final Git = "git";
 }
 
-enum abstract HaxeVersion(String) from String to String
-{
-	final Latest = "latest";
-	final Stable = "stable";
-	final Nightly = "nightly";
-	// use the version already installed (no lix)
-	final Current = "current";
-}
-
 private final HaxelibRepo = Path.join([Sys.getEnv("HOME"), "haxe/haxelib"]);
 
 function main()
 {
-	final haxeVersion:HaxeVersion = Core.getInput("haxe-version");
 	final limeVersion:LibVersion = Core.getInput("lime-version");
 	final openflVersion:LibVersion = Core.getInput("openfl-version");
 	final flixelVersions:LibVersion = Core.getInput("flixel-versions");
@@ -40,17 +30,8 @@ function main()
 	final target:Target = Core.getInput("target");
 	final runTests:Bool = Core.getInput("run-tests") == "true";
 	
-	if (runTests)
-	{
-		if (target == Hl && haxeVersion.startsWith("3"))
-		{
-			return; // OpenFL's HL target and Haxe 3 don't work together
-		}
-	}
-	
 	Core.startGroup("Installing Haxe Dependencies");
 	final installationResult = runUntilFailure([
-		setupLix.bind(haxeVersion),
 		run.bind("sudo add-apt-repository ppa:haxe/snapshots -y"), // for nekotools
 		run.bind("sudo apt-get install --fix-missing"), // for nekotools
 		run.bind("sudo apt-get upgrade"), // for nekotools
@@ -67,8 +48,6 @@ function main()
 	Core.endGroup();
 	
 	Core.startGroup("Listing Dependencies");
-	if (haxeVersion != Current)
-		run("lix -v");
 	run("haxe -version");
 	run("neko -version");
 	run("haxelib version");
@@ -95,21 +74,6 @@ function main()
 		
 		Sys.exit(runAllNamed(Tests.make(target)));
 	}
-}
-
-private function setupLix(haxeVersion):ExitCode
-{
-	if (haxeVersion == Current)
-		return Success;
-		
-	Sys.command("lix scope");
-	final path = Path.join([Sys.getEnv("HOME"), "haxe/.haxerc"]);
-	if (!FileSystem.exists(path))
-	{
-		return Failure;
-	}
-	File.saveContent(path, '{"version": "stable", "resolveLibs": "haxelib"}');
-	return run('lix install haxe $haxeVersion --global');
 }
 
 private function installHaxelibs(limeVersion:LibVersion, openflVersion:LibVersion, flixelVersions:LibVersion):ExitCode

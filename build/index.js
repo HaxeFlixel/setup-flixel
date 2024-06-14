@@ -3129,20 +3129,13 @@ class js_Boot {
 }
 js_Boot.__name__ = true;
 function Main_main() {
-	let haxeVersion = actions_Core.getInput("haxe-version");
 	let limeVersion = actions_Core.getInput("lime-version");
 	let openflVersion = actions_Core.getInput("openfl-version");
 	let flixelVersions = actions_Core.getInput("flixel-versions");
 	let testLocation = actions_Core.getInput("test-location");
 	let target = actions_Core.getInput("target");
 	let runTests = actions_Core.getInput("run-tests") == "true";
-	if(runTests) {
-		if(target == "hl" && haxeVersion.startsWith("3")) {
-			return;
-		}
-	}
 	actions_Core.startGroup("Installing Haxe Dependencies");
-	let haxeVersion1 = haxeVersion;
 	let cmd = "sudo add-apt-repository ppa:haxe/snapshots -y";
 	let cmd1 = "sudo apt-get install --fix-missing";
 	let cmd2 = "sudo apt-get upgrade";
@@ -3152,8 +3145,6 @@ function Main_main() {
 	let flixelVersions1 = flixelVersions;
 	let target1 = target;
 	if(Command_runUntilFailure([function() {
-		return Main_setupLix(haxeVersion1);
-	},function() {
 		return Command_run(cmd);
 	},function() {
 		return Command_run(cmd1);
@@ -3171,9 +3162,6 @@ function Main_main() {
 	actions_Core.exportVariable("HAXELIB_REPO",Main_HaxelibRepo);
 	actions_Core.endGroup();
 	actions_Core.startGroup("Listing Dependencies");
-	if(haxeVersion != "current") {
-		Command_run("lix -v");
-	}
 	Command_run("haxe -version");
 	Command_run("neko -version");
 	Command_run("haxelib version");
@@ -3195,18 +3183,6 @@ function Main_main() {
 		let code = Command_runAllNamed(Tests_make(target));
 		process.exit(code);
 	}
-}
-function Main_setupLix(haxeVersion) {
-	if(haxeVersion == "current") {
-		return 0;
-	}
-	js_node_ChildProcess.spawnSync("lix scope",{ shell : true, stdio : "inherit"});
-	let path = haxe_io_Path.join([process.env["HOME"],"haxe/.haxerc"]);
-	if(!sys_FileSystem.exists(path)) {
-		return 1;
-	}
-	js_node_Fs.writeFileSync(path,"{\"version\": \"stable\", \"resolveLibs\": \"haxelib\"}");
-	return Command_run("lix install haxe " + haxeVersion + " --global");
 }
 function Main_installHaxelibs(limeVersion,openflVersion,flixelVersions) {
 	let user = "GeoKureli";
@@ -3450,18 +3426,6 @@ class haxe_iterators_ArrayIterator {
 }
 haxe_iterators_ArrayIterator.__name__ = true;
 var js_node_ChildProcess = __nccwpck_require__(81);
-var js_node_Fs = __nccwpck_require__(147);
-class sys_FileSystem {
-	static exists(path) {
-		try {
-			js_node_Fs.accessSync(path);
-			return true;
-		} catch( _g ) {
-			return false;
-		}
-	}
-}
-sys_FileSystem.__name__ = true;
 if(typeof(performance) != "undefined" ? typeof(performance.now) == "function" : false) {
 	HxOverrides.now = performance.now.bind(performance);
 }
