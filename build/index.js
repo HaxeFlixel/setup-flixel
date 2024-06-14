@@ -3373,7 +3373,7 @@ function Tests_runUnitTests(target) {
 	Command_runCallbackInDir("unit",function() {
 		return Haxelib_run(args);
 	});
-	if(target == "cpp" || target == "hl") {
+	if(target == "cpp") {
 		process.stdout.write("Running unit tests...\n");
 		process.stdout.write("\n");
 		return OpenFL_run("test","unit",target,"travis");
