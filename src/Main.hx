@@ -37,8 +37,8 @@ function main()
 		run.bind("sudo apt-get upgrade"), // for nekotools
 		run.bind("sudo apt-get install neko -y"), // for nekotools
 		// run.bind("haxelib install haxelib 4.0.3"), // 4.1.0 is failing on unit tests
-		installHaxelibs.bind(limeVersion, openflVersion, flixelVersions),
-		installHxcpp.bind(target)
+		installHaxelibs.bind(limeVersion, openflVersion, flixelVersions) // ,
+			// installHxcpp.bind(target)
 	]);
 	if (installationResult != Success)
 	{
@@ -84,6 +84,7 @@ private function installHaxelibs(limeVersion:LibVersion, openflVersion:LibVersio
 		Haxelib.git.bind("GeoKureli", "munit", "MassiveUnit", "haxe4-3", "src"),
 		Haxelib.git.bind("GeoKureli", "hamcrest", "hamcrest-haxe", "master", "src"),
 		Haxelib.install.bind("systools"),
+		Haxelib.install.bind("hxcpp"),
 		Haxelib.install.bind("task"),
 		Haxelib.install.bind("poly2trihx"),
 		Haxelib.install.bind("nape-haxe4"),
