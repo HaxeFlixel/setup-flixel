@@ -122,7 +122,7 @@ private function installHxcpp(target:Target):ExitCode
 		return Success;
 	}
 	
-	return Haxelib.install.bind("hxcpp");
+	return Haxelib.install("hxcpp");
 	
 	// use git verison
 	// final hxcppDir = Path.join([HaxelibRepo, "hxcpp/git/"]);
