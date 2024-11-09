@@ -3348,10 +3348,15 @@ function Tests_buildCoverageTests(target) {
 	let path1 = "coverage";
 	let target2 = target;
 	let define1 = "coverage2";
+	let path2 = "coverage";
+	let target3 = target;
+	let define2 = "coverage3";
 	return Command_runAll([function() {
 		return OpenFL_build(path,target1,define);
 	},function() {
 		return OpenFL_build(path1,target2,define1);
+	},function() {
+		return OpenFL_build(path2,target3,define2);
 	}]);
 }
 function Tests_buildDemos(target,demos) {
