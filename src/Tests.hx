@@ -63,7 +63,8 @@ private function buildCoverageTests(target:Target):ExitCode
 	Sys.println("\nBuilding coverage tests...\n");
 	return runAll([
 		OpenFL.build.bind("coverage", target, "coverage1"),
-		OpenFL.build.bind("coverage", target, "coverage2")
+		OpenFL.build.bind("coverage", target, "coverage2"),
+		OpenFL.build.bind("coverage", target, "coverage3")
 	]);
 }
 
