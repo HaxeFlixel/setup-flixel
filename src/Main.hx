@@ -70,6 +70,7 @@ function main()
 		putEnv("HXCPP_SILENT", "1");
 		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 		putEnv("HXCPP_CACHE_MB", "5000");
+		putEnv("HXCPP_CATCH_SEGV", "1");
 		Core.endGroup();
 		
 		Sys.exit(runAllNamed(Tests.make(target)));

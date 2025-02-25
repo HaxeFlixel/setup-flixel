@@ -78,7 +78,7 @@ private function buildDemos(target:Target, ?demos:Array<String>, ?args:Array<Str
 	{
 		demos = CppDemos;
 		Sys.println('\nSkipping some demos due to cpp build times\nBuilding ${demos.length} demo(s)...\n');
-		args.push('-DHXCPP_COMPILE_CACHE=\'${Sys.getEnv("HOME") + "/hxcpp_cache"}\'');
+		// args.push('-DHXCPP_COMPILE_CACHE=\'${Sys.getEnv("HOME") + "/hxcpp_cache"}\''); // Already added to env in Main
 	}
 	else
 	{

@@ -3176,6 +3176,7 @@ function Main_main() {
 		Command_putEnv("HXCPP_SILENT","1");
 		Command_putEnv("HXCPP_COMPILE_CACHE",process.env["HOME"] + "/hxcpp_cache");
 		Command_putEnv("HXCPP_CACHE_MB","5000");
+		Command_putEnv("HXCPP_CATCH_SEGV","1");
 		actions_Core.endGroup();
 		let code = Command_runAllNamed(Tests_make(target));
 		process.exit(code);
@@ -3383,7 +3384,6 @@ function Tests_buildDemos(target,demos,args) {
 		let v = "\nSkipping some demos due to cpp build times\nBuilding " + demos.length + " demo(s)...\n";
 		process.stdout.write(Std.string(v));
 		process.stdout.write("\n");
-		args.push("-DHXCPP_COMPILE_CACHE='" + (process.env["HOME"] + "/hxcpp_cache") + "'");
 	} else {
 		process.stdout.write("\nBuilding all demos...\n");
 		process.stdout.write("\n");
