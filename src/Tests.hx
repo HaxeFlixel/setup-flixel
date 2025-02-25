@@ -24,8 +24,7 @@ function make(target):Array<NamedExecution>
 		},
 		{
 			name: "Building flixel-demos",
-			// Cpp takes forever to build anything, so we cant test all the demos
-			run: buildDemos.bind(target, (target == Cpp ? CppDemos : null)),
+			run: buildDemos.bind(target),
 			active: true
 		},
 		{
@@ -68,20 +67,25 @@ private function buildCoverageTests(target:Target):ExitCode
 	]);
 }
 
-private function buildDemos(target:Target, ?demos):ExitCode
-{
-	if (demos == null)
+private function buildDemos(target:Target, ?demos:Array<String>, ?args:Array<String>):ExitCode
+{ 
+	args = args ?? [];
+	if (demos != null)
+	{
+		Sys.println('\nBuilding ${demos.length} demo(s)...\n');
+	}
+	else if (target == Cpp)
+	{
+		final demos = CppDemos;
+		Sys.println('\nSkipping some demos due to cpp build times\nBuilding ${demos.length} demo(s)...\n');
+		args.push('-DHXCPP_COMPILE_CACHE=\'${Sys.getEnv("HOME") + "/hxcpp_cache"}\'');
+	}
+	else
 	{
 		Sys.println('\nBuilding all demos...\n');
 		demos = [];
 	}
-	else if (demos == CppDemos)
-	{
-		Sys.println('\nSkipping some demos due to cpp build times\nBuilding ${demos.length} demo(s)...\n');
-	}
-	else
-		Sys.println('\nBuilding ${demos.length} demo(s)...\n');
-	return Flixel.buildProjects(target, demos);
+	return Flixel.buildProjects(target, demos.concat(args));
 }
 
 private function buildSnippetsDemos(target:Target):ExitCode
