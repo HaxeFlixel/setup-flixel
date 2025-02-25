@@ -3379,7 +3379,8 @@ function Tests_buildDemos(target,demos,args) {
 		process.stdout.write(Std.string(v));
 		process.stdout.write("\n");
 	} else if(target == "cpp") {
-		let v = "\nSkipping some demos due to cpp build times\nBuilding " + Tests_CppDemos.length + " demo(s)...\n";
+		demos = Tests_CppDemos;
+		let v = "\nSkipping some demos due to cpp build times\nBuilding " + demos.length + " demo(s)...\n";
 		process.stdout.write(Std.string(v));
 		process.stdout.write("\n");
 		args.push("-DHXCPP_COMPILE_CACHE='" + (process.env["HOME"] + "/hxcpp_cache") + "'");

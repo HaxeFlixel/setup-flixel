@@ -68,7 +68,7 @@ private function buildCoverageTests(target:Target):ExitCode
 }
 
 private function buildDemos(target:Target, ?demos:Array<String>, ?args:Array<String>):ExitCode
-{ 
+{
 	args = args ?? [];
 	if (demos != null)
 	{
@@ -76,7 +76,7 @@ private function buildDemos(target:Target, ?demos:Array<String>, ?args:Array<Str
 	}
 	else if (target == Cpp)
 	{
-		final demos = CppDemos;
+		demos = CppDemos;
 		Sys.println('\nSkipping some demos due to cpp build times\nBuilding ${demos.length} demo(s)...\n');
 		args.push('-DHXCPP_COMPILE_CACHE=\'${Sys.getEnv("HOME") + "/hxcpp_cache"}\'');
 	}
