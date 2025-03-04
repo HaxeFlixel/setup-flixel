@@ -3199,39 +3199,36 @@ function Main_installHaxelibs(limeVersion,openflVersion,flixelVersions) {
 	let lib3 = "nape-haxe4";
 	let lib4 = "haxeui-core";
 	let lib5 = "haxeui-flixel";
+	let lib6 = "spinehaxe";
 	let user2 = "HaxeFoundation";
 	let haxelib2 = "hscript";
 	let user3 = "larsiusprime";
 	let haxelib3 = "firetongue";
-	let user4 = "Geokureli";
-	let haxelib4 = "spinehaxe";
-	let githubLib2 = "spinehaxe";
-	let branch2 = "haxe4.3.1";
-	let user5 = "larsiusprime";
-	let haxelib5 = "steamwrap";
+	let user4 = "larsiusprime";
+	let haxelib4 = "steamwrap";
 	let defaultUser = "openfl";
-	let lib6 = "lime";
+	let lib7 = "lime";
 	let version = limeVersion;
 	let defaultUser1 = "openfl";
-	let lib7 = "openfl";
+	let lib8 = "openfl";
 	let version1 = openflVersion;
 	let defaultUser2 = "HaxeFlixel";
-	let lib8 = "flixel";
+	let lib9 = "flixel";
 	let version2 = flixelVersions;
 	let defaultUser3 = "HaxeFlixel";
-	let lib9 = "flixel-tools";
+	let lib10 = "flixel-tools";
 	let version3 = flixelVersions;
 	let defaultUser4 = "HaxeFlixel";
-	let lib10 = "flixel-templates";
+	let lib11 = "flixel-templates";
 	let version4 = flixelVersions;
 	let defaultUser5 = "HaxeFlixel";
-	let lib11 = "flixel-demos";
+	let lib12 = "flixel-demos";
 	let version5 = flixelVersions;
 	let defaultUser6 = "HaxeFlixel";
-	let lib12 = "flixel-addons";
+	let lib13 = "flixel-addons";
 	let version6 = flixelVersions;
 	let defaultUser7 = "HaxeFlixel";
-	let lib13 = "flixel-ui";
+	let lib14 = "flixel-ui";
 	let version7 = flixelVersions;
 	let libs = [function() {
 		return Haxelib_git(user,haxelib,githubLib,branch,path);
@@ -3250,29 +3247,29 @@ function Main_installHaxelibs(limeVersion,openflVersion,flixelVersions) {
 	},function() {
 		return Haxelib_install(lib5);
 	},function() {
+		return Haxelib_install(lib6);
+	},function() {
 		return Haxelib_git(user2,haxelib2);
 	},function() {
 		return Haxelib_git(user3,haxelib3);
 	},function() {
-		return Haxelib_git(user4,haxelib4,githubLib2,branch2);
+		return Haxelib_git(user4,haxelib4);
 	},function() {
-		return Haxelib_git(user5,haxelib5);
+		return Haxelib_fromVersion(defaultUser,lib7,version);
 	},function() {
-		return Haxelib_fromVersion(defaultUser,lib6,version);
+		return Haxelib_fromVersion(defaultUser1,lib8,version1);
 	},function() {
-		return Haxelib_fromVersion(defaultUser1,lib7,version1);
+		return Haxelib_fromVersion(defaultUser2,lib9,version2);
 	},function() {
-		return Haxelib_fromVersion(defaultUser2,lib8,version2);
+		return Haxelib_fromVersion(defaultUser3,lib10,version3);
 	},function() {
-		return Haxelib_fromVersion(defaultUser3,lib9,version3);
+		return Haxelib_fromVersion(defaultUser4,lib11,version4);
 	},function() {
-		return Haxelib_fromVersion(defaultUser4,lib10,version4);
+		return Haxelib_fromVersion(defaultUser5,lib12,version5);
 	},function() {
-		return Haxelib_fromVersion(defaultUser5,lib11,version5);
+		return Haxelib_fromVersion(defaultUser6,lib13,version6);
 	},function() {
-		return Haxelib_fromVersion(defaultUser6,lib12,version6);
-	},function() {
-		return Haxelib_fromVersion(defaultUser7,lib13,version7);
+		return Haxelib_fromVersion(defaultUser7,lib14,version7);
 	}];
 	if(limeVersion == "dev") {
 		let lib = "format";
