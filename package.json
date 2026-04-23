@@ -1,6 +1,6 @@
 {
 	"devDependencies": {
-		"@actions/core": "^1.9.1",
+		"@actions/core": "^1.11.1",
 		"@vercel/ncc": "^0.38.1",
 		"dts2hx": "^0.15.3",
 		"lix": "^15.10.1"
